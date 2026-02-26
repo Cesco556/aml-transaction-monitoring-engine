@@ -2,6 +2,12 @@
 
 Production-grade AML (Anti-Money Laundering) transaction monitoring MVP for a fintech security portfolio. Ingests transactions (CSV/JSONL), runs rule-based detection and risk scoring, produces alerts and SAR-like reports, with a FastAPI and CLI interface.
 
+## Dashboard (Screenshots)
+
+![Overview](docs/assets/overview.png)
+![Alerts](docs/assets/alerts.png)
+![Network](docs/assets/network.png)
+
 ## Portfolio Overview
 
 **What problem it solves:** Transaction monitoring for AML: ingest transactions, run configurable detection rules (high-value, sanctions keywords, high-risk country, rapid velocity, network ring), score risk, produce alerts and SAR-style reports. Case workflow (create case from alerts, update status, add notes) and full audit traceability so you can answer “why was transaction X flagged?” and reproduce any run.
