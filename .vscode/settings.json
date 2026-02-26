@@ -1,0 +1,4 @@
+{
+  "terminal.integrated.cwd": "${workspaceFolder}",
+  "terminal.integrated.inheritEnv": true
+}

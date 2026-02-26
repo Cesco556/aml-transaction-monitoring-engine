@@ -1,0 +1,15 @@
+# AML Monitoring Dashboard – theme and behaviour
+# https://docs.streamlit.io/library/advanced-features/theming
+
+[theme]
+primaryColor = "#1e3a5f"
+backgroundColor = "#0e1117"
+secondaryBackgroundColor = "#262730"
+textColor = "#fafafa"
+font = "sans serif"
+
+[server]
+headless = true
+
+[browser]
+gatherUsageStats = false

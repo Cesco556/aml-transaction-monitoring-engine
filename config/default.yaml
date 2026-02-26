@@ -1,0 +1,83 @@
+# AML Transaction Monitoring - Default Configuration
+# Override via config/dev.yaml or environment variables (AML_*)
+
+app:
+  name: aml-monitoring
+  env: default
+  log_level: INFO
+
+database:
+  url: sqlite:///./data/aml.db
+  echo: false
+
+ingest:
+  csv_encoding: utf-8
+  jsonl_chunk_size: 1000
+  batch_size: 500
+
+rules:
+  high_value:
+    enabled: true
+    threshold_amount: 10000
+    currency_default: USD
+  rapid_velocity:
+    enabled: true
+    min_transactions: 5
+    window_minutes: 15
+  geo_mismatch:
+    enabled: true
+    window_minutes: 60
+    max_countries_in_window: 2
+  structuring_smurfing:
+    enabled: true
+    threshold_amount: 9500
+    min_transactions: 3
+    window_minutes: 60
+  sanctions_keyword:
+    enabled: true
+    list_version: "1.0"
+    effective_date: "2026-01-01"
+    keywords:
+      - sanctioned
+      - ofac
+      - blocked
+      - restricted
+  high_risk_country:
+    enabled: true
+    list_version: "1.0"
+    effective_date: "2026-01-01"
+    countries:
+      - XX  # placeholder; replace with ISO codes (validation fails until overridden)
+      - YY
+  network_ring:
+    enabled: true
+    min_shared_counterparties: 2
+    min_linked_accounts: 2
+    lookback_days: 30
+    severity: high
+    score_delta: 40
+
+scoring:
+  base_risk_per_customer: 10
+  max_score: 100
+  thresholds:
+    low: 33
+    medium: 66
+    high: 100
+
+reporting:
+  output_dir: ./reports
+  sar_format: true
+  include_evidence: true
+
+api:
+  host: 0.0.0.0
+  port: 8000
+  workers: 1
+
+run_rules:
+  chunk_size: 0  # 0 = no chunking (load all); set e.g. 5000 for bounded memory + checkpoint
+
+stream_simulate:
+  delay_seconds: 1
+  batch_size: 10

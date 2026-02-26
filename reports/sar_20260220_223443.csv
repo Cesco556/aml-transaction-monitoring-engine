@@ -1,0 +1,49 @@
+alert_id,transaction_id,rule_id,severity,reason,amount,currency,ts,account_id,counterparty,country
+1,31,HighValueTransaction,high,Transaction amount 50000.0 >= threshold 10000.0,50000.0,USD,2026-02-14T21:47:49,1,Big Payee,USA
+2,32,SanctionsKeywordMatch,high,Counterparty name matches sanctions keyword: 'sanctioned',1000.0,USD,2026-02-15T21:47:49,2,sanctioned entity,GBR
+3,37,RapidVelocity,medium,5 transactions from same account within 15 minutes,500.0,EUR,2026-02-16T21:55:49,3,Retail,FRA
+4,38,RapidVelocity,medium,6 transactions from same account within 15 minutes,500.0,EUR,2026-02-16T21:57:49,3,Retail,FRA
+5,1,NetworkRingIndicator,high,Account shares 4 counterparties with 4 other account(s) (ring pattern),1314.91,USD,2026-02-13T21:47:49,1,Trade Ltd,USA
+6,2,NetworkRingIndicator,high,Account shares 3 counterparties with 4 other account(s) (ring pattern),565.29,USD,2026-02-13T23:47:49,2,Acme Ltd,GBR
+7,3,NetworkRingIndicator,high,Account shares 3 counterparties with 4 other account(s) (ring pattern),1385.73,USD,2026-02-14T01:47:49,3,Pay Ltd,FRA
+8,4,NetworkRingIndicator,high,Account shares 3 counterparties with 4 other account(s) (ring pattern),160.39,USD,2026-02-14T03:47:49,4,Global Ltd,DEU
+9,5,NetworkRingIndicator,high,Account shares 4 counterparties with 4 other account(s) (ring pattern),542.06,USD,2026-02-14T05:47:49,5,Global Ltd,IR
+10,31,HighValueTransaction,high,Transaction amount 50000.0 >= threshold 10000.0,50000.0,USD,2026-02-14T21:47:49,1,Big Payee,USA
+11,32,SanctionsKeywordMatch,high,Counterparty name matches sanctions keyword: 'sanctioned',1000.0,USD,2026-02-15T21:47:49,2,sanctioned entity,GBR
+12,37,RapidVelocity,medium,5 transactions from same account within 15 minutes,500.0,EUR,2026-02-16T21:55:49,3,Retail,FRA
+13,38,RapidVelocity,medium,6 transactions from same account within 15 minutes,500.0,EUR,2026-02-16T21:57:49,3,Retail,FRA
+14,71,HighValueTransaction,high,Transaction amount 50000.0 >= threshold 10000.0,50000.0,USD,2026-02-14T22:30:38,1,Big Payee,USA
+15,72,SanctionsKeywordMatch,high,Counterparty name matches sanctions keyword: 'sanctioned',1000.0,USD,2026-02-15T22:30:38,2,sanctioned entity,GBR
+16,77,RapidVelocity,medium,5 transactions from same account within 15 minutes,500.0,EUR,2026-02-16T22:38:38,3,Retail,FRA
+17,78,RapidVelocity,medium,6 transactions from same account within 15 minutes,500.0,EUR,2026-02-16T22:40:38,3,Retail,FRA
+18,1,NetworkRingIndicator,high,Account shares 4 counterparties with 4 other account(s) (ring pattern),1314.91,USD,2026-02-13T21:47:49,1,Trade Ltd,USA
+19,2,NetworkRingIndicator,high,Account shares 3 counterparties with 4 other account(s) (ring pattern),565.29,USD,2026-02-13T23:47:49,2,Acme Ltd,GBR
+20,3,NetworkRingIndicator,high,Account shares 3 counterparties with 4 other account(s) (ring pattern),1385.73,USD,2026-02-14T01:47:49,3,Pay Ltd,FRA
+21,4,NetworkRingIndicator,high,Account shares 3 counterparties with 4 other account(s) (ring pattern),160.39,USD,2026-02-14T03:47:49,4,Global Ltd,DEU
+22,5,NetworkRingIndicator,high,Account shares 4 counterparties with 4 other account(s) (ring pattern),542.06,USD,2026-02-14T05:47:49,5,Global Ltd,IR
+23,31,HighValueTransaction,high,Transaction amount 50000.0 >= threshold 10000.0,50000.0,USD,2026-02-14T21:47:49,1,Big Payee,USA
+24,32,SanctionsKeywordMatch,high,Counterparty name matches sanctions keyword: 'sanctioned',1000.0,USD,2026-02-15T21:47:49,2,sanctioned entity,GBR
+25,37,RapidVelocity,medium,5 transactions from same account within 15 minutes,500.0,EUR,2026-02-16T21:55:49,3,Retail,FRA
+26,38,RapidVelocity,medium,6 transactions from same account within 15 minutes,500.0,EUR,2026-02-16T21:57:49,3,Retail,FRA
+27,71,HighValueTransaction,high,Transaction amount 50000.0 >= threshold 10000.0,50000.0,USD,2026-02-14T22:30:38,1,Big Payee,USA
+28,72,SanctionsKeywordMatch,high,Counterparty name matches sanctions keyword: 'sanctioned',1000.0,USD,2026-02-15T22:30:38,2,sanctioned entity,GBR
+29,76,RapidVelocity,medium,7 transactions from same account within 15 minutes,500.0,EUR,2026-02-16T22:36:38,3,Retail,FRA
+30,77,RapidVelocity,medium,10 transactions from same account within 15 minutes,500.0,EUR,2026-02-16T22:38:38,3,Retail,FRA
+31,78,RapidVelocity,medium,13 transactions from same account within 15 minutes,500.0,EUR,2026-02-16T22:40:38,3,Retail,FRA
+32,111,HighValueTransaction,high,Transaction amount 50000.0 >= threshold 10000.0,50000.0,USD,2026-02-14T22:33:13,1,Big Payee,USA
+33,112,SanctionsKeywordMatch,high,Counterparty name matches sanctions keyword: 'sanctioned',1000.0,USD,2026-02-15T22:33:13,2,sanctioned entity,GBR
+34,114,RapidVelocity,medium,6 transactions from same account within 15 minutes,500.0,EUR,2026-02-16T22:35:13,3,Retail,FRA
+35,115,RapidVelocity,medium,9 transactions from same account within 15 minutes,500.0,EUR,2026-02-16T22:37:13,3,Retail,FRA
+36,116,RapidVelocity,medium,12 transactions from same account within 15 minutes,500.0,EUR,2026-02-16T22:39:13,3,Retail,FRA
+37,117,RapidVelocity,medium,15 transactions from same account within 15 minutes,500.0,EUR,2026-02-16T22:41:13,3,Retail,FRA
+38,118,RapidVelocity,medium,17 transactions from same account within 15 minutes,500.0,EUR,2026-02-16T22:43:13,3,Retail,FRA
+39,119,StructuringSmurfing,high,3 transactions just below threshold 9500.0 in 60 min,9200.0,USD,2026-02-17T22:38:13,4,Split Pay,DEU
+40,151,HighValueTransaction,high,Transaction amount 50000.0 >= threshold 10000.0,50000.0,USD,2026-02-14T22:34:40,1,Big Payee,USA
+41,152,SanctionsKeywordMatch,high,Counterparty name matches sanctions keyword: 'sanctioned',1000.0,USD,2026-02-15T22:34:40,2,sanctioned entity,GBR
+42,153,RapidVelocity,medium,5 transactions from same account within 15 minutes,500.0,EUR,2026-02-16T22:34:40,3,Retail,FRA
+43,154,RapidVelocity,medium,8 transactions from same account within 15 minutes,500.0,EUR,2026-02-16T22:36:40,3,Retail,FRA
+44,155,RapidVelocity,medium,11 transactions from same account within 15 minutes,500.0,EUR,2026-02-16T22:38:40,3,Retail,FRA
+45,156,RapidVelocity,medium,14 transactions from same account within 15 minutes,500.0,EUR,2026-02-16T22:40:40,3,Retail,FRA
+46,157,RapidVelocity,medium,16 transactions from same account within 15 minutes,500.0,EUR,2026-02-16T22:42:40,3,Retail,FRA
+47,158,RapidVelocity,medium,18 transactions from same account within 15 minutes,500.0,EUR,2026-02-16T22:44:40,3,Retail,FRA
+48,159,StructuringSmurfing,high,4 transactions just below threshold 9500.0 in 60 min,9200.0,USD,2026-02-17T22:39:40,4,Split Pay,DEU

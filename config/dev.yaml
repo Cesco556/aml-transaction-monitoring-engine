@@ -1,0 +1,27 @@
+# Development overrides - merge with default.yaml
+app:
+  env: dev
+  log_level: DEBUG
+
+database:
+  url: sqlite:///./data/aml_dev.db
+  echo: false  # set true only when debugging SQL; reduces I/O and log noise during run-rules
+
+run_rules:
+  chunk_size: 5000  # process in batches for progress + resume; 0 = load all (slower, no checkpoint)
+
+rules:
+  high_value:
+    threshold_amount: 5000
+  high_risk_country:
+    countries:
+      - IR
+      - KP
+      - SY
+      - CU
+
+reporting:
+  output_dir: ./reports/dev
+
+api:
+  port: 8001

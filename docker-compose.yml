@@ -1,0 +1,23 @@
+# Local PostgreSQL for AML engine (faster run-rules than SQLite).
+# Usage: docker-compose up -d   then set AML_DATABASE_URL and run migrations.
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: aml-postgres
+    environment:
+      POSTGRES_USER: aml
+      POSTGRES_PASSWORD: aml
+      POSTGRES_DB: aml
+    ports:
+      - "5432:5432"
+    volumes:
+      - aml_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U aml -d aml"]
+      interval: 3s
+      timeout: 3s
+      retries: 5
+
+volumes:
+  aml_pgdata:

@@ -1,0 +1,390 @@
+# AML Transaction Monitoring – Runbook
+
+## Quickstart
+
+From project root (clean clone). Only Poetry is required on PATH; make runs lint/test/format via `poetry run`.
+
+```bash
+# 1) Install (only Poetry required)
+make install
+
+# 2) Lint
+make lint
+
+# 3) Format
+make format
+
+# 4) Test
+make test
+
+# 5) CI (lint then test)
+make ci
+
+# 6) Optional: interactive Poetry shell (Makefile prints a short note)
+make shell
+```
+
+Full pipeline (generate data, ingest, run rules, reports):
+
+```bash
+cd "AML Transaction Monitoring Engine Project"
+make install
+make synthetic
+make ingest
+make run-rules
+make reports
+```
+
+## Prerequisites
+
+- Python 3.11+
+- Poetry: `curl -sSL https://install.python-poetry.org | python3 -`
+- Project cloned and dependencies installed: `poetry install`
+
+**Audit traceability (optional):** Set `AML_ACTOR` (e.g. `analyst`, `batch-job`) so CLI audit log entries record the actor. API: send `X-Correlation-ID` for request correlation (echoed in response). **API key (mutations):** Mutating endpoints (PATCH /alerts/{id}, POST/PATCH /cases, POST /cases/{id}/notes) require header `X-API-Key`. Set `AML_API_KEYS` in format `name1:key1,name2:key2` (e.g. `admin:dev_admin_key,analyst1:dev_analyst_key`). If unset, defaults to `dev:dev_key` (dev-only; do not use in production). GET endpoints (alerts, cases, transactions, openapi) remain open in this version. Actor in audit logs for mutations is the identity bound to the API key, not any client-supplied header.
+
+## Initial Setup (Clean Clone)
+
+```bash
+cd "AML Transaction Monitoring Engine Project"
+poetry install
+cp .env.example .env   # optional: edit .env for overrides
+poetry run python scripts/generate_synthetic_data.py
+```
+
+Ensure `data/synthetic/transactions.csv` and `data/synthetic/transactions.jsonl` exist.
+
+## Database (SQLite vs Postgres)
+
+- **SQLite (default):** `database.url` in config or `AML_DATABASE_URL=sqlite:///./data/aml.db`. Schema is created/updated by the app; for existing DBs with missing columns set `AML_ALLOW_SCHEMA_UPGRADE=true` for local dev.
+- **Postgres:** Set `DATABASE_URL` or `AML_DATABASE_URL` to a `postgresql+psycopg2://user:pass@host:5432/dbname` URL. Schema is managed by Alembic only (no auto-upgrade). Run migrations before starting the app.
+
+### Migrations (Alembic, Postgres)
+
+Migrations use `DATABASE_URL` or `AML_DATABASE_URL` from the environment.
+
+```bash
+# Apply all migrations (e.g. before starting API against Postgres)
+make migrate
+# or: poetry run alembic upgrade head
+
+# Create a new auto-generated revision (optional)
+make makemigration
+# or: poetry run alembic revision --autogenerate -m "describe_change"
+```
+
+## Demo
+
+From project root, with **Docker Desktop (or Docker daemon) running**:
+
+```bash
+./scripts/demo.sh
+```
+
+This script: ensures Docker is reachable; starts the stack (`docker compose up -d --build`); runs migrations; seeds synthetic data, runs ingest, build-network, and run-rules; generates SAR reports into `reports/`; fetches a real alert and correlation_id; demonstrates authenticated PATCH (disposition) and POST /cases; runs `reproduce-run` and writes the bundle to `reports/demo_repro_<cid>.json`; prints a summary (ALERT_ID, CORRELATION_ID, CASE_ID, paths to reports and repro bundle). **By default the stack is left running.** To stop it:
+
+```bash
+./scripts/demo.sh --down
+```
+
+**Prerequisites:** Docker Desktop (or Docker daemon) running. No `jq` required (script uses Python to parse JSON).
+
+**What it produces:** Alerts and cases in the DB, SAR reports (JSON/CSV) in `reports/`, and a reproducibility bundle `reports/demo_repro_<correlation_id>.json`.
+
+## Docker (Postgres + API + Dashboard)
+
+From project root, with **Docker Desktop (or Docker daemon) running**:
+
+```bash
+# Start Postgres, API, and Dashboard
+docker compose up -d --build
+
+# Read-only checks
+curl -s http://127.0.0.1:8000/alerts
+curl -s http://127.0.0.1:8000/cases
+# Dashboard in browser: http://localhost:8501
+```
+
+The **dashboard** service runs Streamlit on port 8501 and uses the API at `http://api:8000` inside the network. To have data (alerts, cases, SAR reports), run the demo once: `./scripts/demo.sh` (it will start the stack, seed, and leave it up; dashboard will then show data). Use `.env.docker` as reference; `DATABASE_URL` is set in `docker-compose.yml` for the api service. No `AML_ALLOW_SCHEMA_UPGRADE` needed when using Postgres.
+
+## Daily / On-Demand Operations
+
+### Ingest new transaction file
+
+```bash
+poetry run aml ingest /path/to/transactions.csv
+# or
+poetry run aml ingest /path/to/transactions.jsonl
+```
+
+Use `-c config/dev.yaml` to use dev config.
+
+### Train thresholds from data (optional)
+
+The engine can **train itself** from ingested transactions: it computes rule thresholds (high-value, rapid-velocity, structuring) from the data and writes `config/tuned.yaml`. That file is merged over default (and dev) on every subsequent run, so the next `run-rules` uses the learned thresholds.
+
+```bash
+poetry run aml ingest /path/to/transactions.csv
+poetry run aml train
+poetry run aml run-rules
+```
+
+Use `-o path/to/tuned.yaml` to write tuned config elsewhere. To stop using tuned values, delete `config/tuned.yaml`.
+
+### Build network (entity/relationship edges)
+
+Run after ingest to build or update relationship edges from transactions (account→counterparty, account→merchant, customer→counterparty). Required for the NetworkRingIndicator rule.
+
+```bash
+poetry run aml build-network
+```
+
+Expect output like: `Network build complete: N edges (X.XXs).` Audited with action=network_build.
+
+### Run detection rules
+
+```bash
+poetry run aml run-rules
+```
+
+Expect output like: `Processed N transactions, created M alerts.` Run after `build-network` to include NetworkRingIndicator alerts.
+
+### Generate SAR reports
+
+```bash
+poetry run aml generate-reports
+```
+
+Reports are written under `./reports/` (or `config.reporting.output_dir`) as `sar_YYYYMMDD_HHMMSS.json` and `.csv`.
+
+### Start the API
+
+The Makefile `serve` target binds to **127.0.0.1** and **$(PORT)** (default 8000) via `AML_API_HOST` and `AML_API_PORT`. Use a different port to avoid collisions:
+
+```bash
+make serve
+# Or: PORT=8001 make serve   → http://127.0.0.1:8001
+```
+
+To free the port first: `make kill-port` (default PORT=8000), or `PORT=8001 make kill-port`. The target prints what it is killing and does not error if nothing is using the port.
+
+- **POST /score**: Body `{"transaction": { ... }}` → risk score and rule hits.
+- **GET /alerts**: Query params `limit`, `severity` (no API key required).
+- **GET /transactions/{id}**: Transaction detail with alerts (no API key required).
+- **PATCH /alerts/{id}**: Requires `X-API-Key`. Body `{"status": "open"|"closed", "disposition": "false_positive"|"escalate"|"sar"}` (partial). Updates are audited with `disposition_update`, actor from key identity, and `X-Correlation-ID` in response.
+
+Example curl for a mutation (use a real alert id; key from `AML_API_KEYS`, e.g. `dev_key` when using default dev mapping):
+```bash
+# 1) Get an existing alert id
+ALERT_ID=$(curl -s "http://127.0.0.1:8000/alerts?limit=1" | python3 -c "import sys,json; d=json.load(sys.stdin); print(d[0]['id'] if d else '')")
+echo "ALERT_ID=$ALERT_ID"
+
+# 2) Patch that alert (should return 200)
+curl -s -i -X PATCH "http://127.0.0.1:8000/alerts/$ALERT_ID" \
+  -H "Content-Type: application/json" \
+  -H "X-API-Key: dev_key" \
+  -d '{"status":"closed","disposition":"false_positive"}' | head -n 20
+```
+If `ALERT_ID` is empty, run the pipeline first (ingest + run-rules) to create alerts.
+
+### Update alert disposition (API)
+
+See **Manual Verification** below for reliable PATCH steps (avoids port collisions).
+
+Or via CLI (one correlation_id per run, actor from `AML_ACTOR` or "cli"):
+
+```bash
+poetry run aml update-alert --id 1 --status closed --disposition false_positive
+```
+
+### Manual Verification (PATCH and port hygiene)
+
+To avoid **port collisions** (e.g. "address already in use" or hitting the wrong server), use a dedicated port for local testing. Recommended: **PORT=8001**.
+
+**1. CI**
+```bash
+make ci
+```
+
+**2. Pipeline and server**
+```bash
+AML_ALLOW_SCHEMA_UPGRADE=true make run
+PORT=8001 make serve
+```
+(Leave the server running in that terminal, or run `PORT=8001 make serve &` and use `PORT=8001 make kill-port` when done.)
+
+**3. GET first alert id and PATCH**
+```bash
+# Get an existing alert id
+ALERT_ID=$(curl -s "http://127.0.0.1:8001/alerts?limit=1" | python3 -c "import sys,json; d=json.load(sys.stdin); print(d[0]['id'] if d else '')")
+echo "ALERT_ID=$ALERT_ID"
+
+# PATCH that alert (X-API-Key required; should return 200 when ALERT_ID is set)
+curl -s -i -X PATCH "http://127.0.0.1:8001/alerts/$ALERT_ID" \
+  -H "Content-Type: application/json" \
+  -H "X-API-Key: dev_key" \
+  -d '{"status":"closed","disposition":"false_positive"}' | head -n 20
+```
+If `ALERT_ID` is empty, run ingest + run-rules first to create alerts. Optional: list by correlation_id with `curl -s "http://127.0.0.1:8001/alerts?correlation_id=YOUR_CORRELATION_ID"`.
+
+**4. Free the port when done**
+```bash
+PORT=8001 make kill-port
+```
+
+### Dashboard (Streamlit)
+
+With the API running (e.g. `make serve`), start the dashboard in another terminal:
+
+```bash
+make dashboard
+# or: poetry run streamlit run scripts/dashboard.py
+```
+
+Open the URL Streamlit prints (default http://localhost:8501). The dashboard shows alerts, cases, and a preview of the latest SAR report. If the API is not reachable, it still shows the latest SAR file from `reports/`. See [docs/DASHBOARD.md](docs/DASHBOARD.md) for env vars and tuning (timeout, cache, row limits).
+
+**One-shot verification (run pipeline, start server, PATCH first alert, stop server):**
+```bash
+PORT=8001 make verify-patch
+```
+
+### Network alert demo (ingest → build-network → run-rules → view alert → create case)
+
+1. Generate data, ingest, build relationship edges, then run rules so NetworkRingIndicator can fire (when accounts share enough counterparties):
+
+```bash
+make synthetic
+make ingest
+poetry run aml build-network
+poetry run aml run-rules
+```
+
+2. List alerts and find a NetworkRingIndicator alert (if any); note its `id` and `correlation_id`:
+
+```bash
+curl -s http://127.0.0.1:8001/alerts | python3 -m json.tool | head -60
+```
+
+3. Create a case from that alert and open it:
+
+```bash
+curl -s -X POST http://127.0.0.1:8001/cases \
+  -H "Content-Type: application/json" \
+  -H "X-API-Key: dev_key" \
+  -d '{"alert_ids":[ALERT_ID],"priority":"HIGH","note":"Network ring review"}' | python3 -m json.tool
+curl -s http://127.0.0.1:8001/cases/CASE_ID | python3 -m json.tool
+```
+
+Replace `ALERT_ID` and `CASE_ID` with actual IDs. NetworkRingIndicator alerts include evidence: `linked_accounts`, `shared_counterparties`, `overlap_count`, `degree`, `lookback_days`.
+
+### End-to-end flow (ingest → rules → API → PATCH → verify audit)
+
+```bash
+make install
+make synthetic
+AML_ALLOW_SCHEMA_UPGRADE=true make run
+PORT=8001 make serve
+# In another terminal (use a real alert id for 200):
+ALERT_ID=$(curl -s "http://127.0.0.1:8001/alerts?limit=1" | python3 -c "import sys,json; d=json.load(sys.stdin); print(d[0]['id'] if d else '')")
+curl -s -i -X PATCH "http://127.0.0.1:8001/alerts/$ALERT_ID" -H "Content-Type: application/json" -H "X-API-Key: dev_key" -d '{"status":"closed","disposition":"false_positive"}' | head -n 5
+# When done: PORT=8001 make kill-port
+```
+
+### Simulate stream ingestion
+
+```bash
+poetry run aml simulate-stream data/synthetic/transactions.csv --delay 1 --batch-size 10
+```
+
+Reads file in batches and ingests with a delay between batches.
+
+### Case workflow demo
+
+Minimal case management: create a case (optionally link alerts/transactions), update status, add notes. All actions are audited (AuditLog: case_create, case_update, case_note_add, case_item_add) with correlation_id and actor.
+
+**CLI (actor from `AML_ACTOR` or "cli"):**
+
+```bash
+# Create case linked to alerts, with priority and initial note
+poetry run aml create-case --alerts 1,2,3 --priority HIGH --assigned-to "analyst1" --note "Initial review"
+
+# Update case status (valid transitions: NEW→INVESTIGATING→ESCALATED→CLOSED; NEW/INVESTIGATING→CLOSED)
+poetry run aml update-case --id 1 --status INVESTIGATING --assigned-to "analyst1"
+
+# Add a note
+poetry run aml add-case-note --id 1 --note "Reviewed velocity pattern; requesting more info"
+```
+
+**API (with server running, e.g. PORT=8001 make serve):**
+
+```bash
+# Create case (X-API-Key required)
+curl -s -X POST http://127.0.0.1:8001/cases \
+  -H "Content-Type: application/json" \
+  -H "X-API-Key: dev_key" \
+  -d '{"alert_ids":[1,2],"priority":"HIGH","assigned_to":"analyst1","note":"Initial review"}' | python3 -m json.tool
+
+# List cases (optional filters: status, assigned_to, priority, limit)
+curl -s "http://127.0.0.1:8001/cases?status=NEW&limit=10" | python3 -m json.tool | head -50
+
+# Get case by ID (includes items and notes)
+curl -s http://127.0.0.1:8001/cases/1 | python3 -m json.tool
+
+# Update case (X-API-Key required)
+curl -s -X PATCH http://127.0.0.1:8001/cases/1 \
+  -H "Content-Type: application/json" \
+  -H "X-API-Key: dev_key" \
+  -d '{"status":"INVESTIGATING"}'
+
+# Add note (X-API-Key required)
+curl -s -X POST http://127.0.0.1:8001/cases/1/notes \
+  -H "Content-Type: application/json" \
+  -H "X-API-Key: dev_key" \
+  -d '{"note":"Reviewed velocity pattern"}'
+```
+
+## Troubleshooting
+
+| Issue | Action |
+|-------|--------|
+| `Database not initialized` | Ensure you ran ingest or run-rules at least once (they call `init_db`), or start API which initializes on startup. |
+| No alerts after run-rules | Check rule thresholds in `config/default.yaml` (e.g. `high_value.threshold_amount`). Generate synthetic data that triggers rules (see `scripts/generate_synthetic_data.py`). |
+| Reports directory missing | Reports are created on first run; `output_dir` is created if needed. |
+| Port already in use | Run `make kill-port` (or `PORT=8001 make kill-port`), then `PORT=8001 make serve`. See **Manual Verification**. |
+| Import errors | Run from project root and ensure `poetry run` or `poetry shell` so `src` is on path. |
+
+## Verification Commands
+
+From project root. Make targets use `poetry run` (no need for ruff/pytest/black/mypy on PATH).
+
+```bash
+# Lint and test (or: make ci)
+make lint
+make test
+
+# Full pipeline
+make synthetic && make ingest && make run-rules && make reports
+```
+
+## Test environment
+
+- **`make ci`** uses SQLite for all tests and **ignores `DATABASE_URL`** (the test runner clears it). So `DATABASE_URL=postgresql://... make ci` still passes using SQLite.
+- To run the optional Postgres smoke test, set **`POSTGRES_TEST_URL`** (a postgresql URL) and run **`make test-postgres`**. Without `POSTGRES_TEST_URL`, that test is skipped.
+
+## Config Overrides
+
+- **API keys**: `AML_API_KEYS=name1:key1,name2:key2` (e.g. `admin:dev_admin_key,analyst1:dev_analyst_key`). If empty/unset, defaults to `dev:dev_key` (dev-only). Used for mutating endpoints; GET endpoints remain open.
+- **Config file**: `AML_CONFIG_PATH=config/dev.yaml`
+- **Database**: `AML_DATABASE_URL=sqlite:///./data/aml_dev.db`
+- **Log level**: `AML_LOG_LEVEL=DEBUG`
+- **API**: `AML_API_HOST`, `AML_API_PORT` (used by `make serve` for host/port when not passed as CLI options)
+
+## Governance and reproducibility
+
+- **Governance docs**: [docs/GOVERNANCE/](docs/GOVERNANCE/) — MRM, tuning, data quality, and **AUDIT_PLAYBOOK.md** for answering “why was transaction X flagged?” using `config_hash`, `correlation_id`, audit logs, `evidence_fields`, and cases/notes.
+- **Get a correlation_id**: From the API, `GET /alerts?limit=1` (or filter by run); each alert has `correlation_id`. From the DB, query `audit_logs` for `action=run_rules` (or ingest/report) and use that row’s `correlation_id`.
+- **Reproduce a run**: `poetry run aml reproduce-run <correlation_id> [output_path]`. Example: `poetry run aml reproduce-run 057696d5-6833-4ede-a87a-c2cf5b25adda my_run.json`. Produces a single JSON file with `metadata`, `config`, `audit_logs`, `alerts`, `cases`, and `network` for that run. Default output: `reproduce_<correlation_id>.json` in the current directory. The command is audited (`action=reproduce_run`, `entity_id=correlation_id`, `details_json` includes `target_correlation_id` and `output_path`).
+
+## Audit
+
+Audit logs are stored in `audit_logs` table (correlation_id, action, entity_type, entity_id, ts, actor, details_json). Ingest, run_rules, and generate_report write batch entries; **PATCH /alerts/{id}** (and CLI `update-alert`) write one row per update with `action=disposition_update`, `entity_type=alert`, and details_json containing old_status, new_status, old_disposition, new_disposition, config_hash. For protected API mutations, **actor** is set from the authenticated API key identity (trustworthy); X-Actor header is ignored. No secrets or PII in audit details.

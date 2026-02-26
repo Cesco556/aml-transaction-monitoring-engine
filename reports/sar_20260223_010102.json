@@ -1,0 +1,2591 @@
+{
+  "generated_at": "2026-02-23T01:01:02.129083+00:00",
+  "alerts": [
+    {
+      "alert_id": 1,
+      "transaction_id": 31,
+      "rule_id": "HighValueTransaction",
+      "severity": "high",
+      "reason": "Transaction amount 50000.0 >= threshold 10000.0",
+      "evidence": {
+        "amount": 50000.0,
+        "threshold": 10000.0
+      },
+      "amount": 50000.0,
+      "currency": "USD",
+      "ts": "2026-02-14T21:47:49",
+      "account_id": 1,
+      "counterparty": "Big Payee",
+      "country": "USA"
+    },
+    {
+      "alert_id": 3,
+      "transaction_id": 37,
+      "rule_id": "RapidVelocity",
+      "severity": "medium",
+      "reason": "5 transactions from same account within 15 minutes",
+      "evidence": {
+        "count": 5,
+        "window_minutes": 15,
+        "account_id": 3
+      },
+      "amount": 500.0,
+      "currency": "EUR",
+      "ts": "2026-02-16T21:55:49",
+      "account_id": 3,
+      "counterparty": "Retail",
+      "country": "FRA"
+    },
+    {
+      "alert_id": 2,
+      "transaction_id": 32,
+      "rule_id": "SanctionsKeywordMatch",
+      "severity": "high",
+      "reason": "Counterparty name matches sanctions keyword: 'sanctioned'",
+      "evidence": {
+        "counterparty": "sanctioned entity",
+        "keyword": "sanctioned"
+      },
+      "amount": 1000.0,
+      "currency": "USD",
+      "ts": "2026-02-15T21:47:49",
+      "account_id": 2,
+      "counterparty": "sanctioned entity",
+      "country": "GBR"
+    },
+    {
+      "alert_id": 4,
+      "transaction_id": 38,
+      "rule_id": "RapidVelocity",
+      "severity": "medium",
+      "reason": "6 transactions from same account within 15 minutes",
+      "evidence": {
+        "count": 6,
+        "window_minutes": 15,
+        "account_id": 3
+      },
+      "amount": 500.0,
+      "currency": "EUR",
+      "ts": "2026-02-16T21:57:49",
+      "account_id": 3,
+      "counterparty": "Retail",
+      "country": "FRA"
+    },
+    {
+      "alert_id": 5,
+      "transaction_id": 1,
+      "rule_id": "NetworkRingIndicator",
+      "severity": "high",
+      "reason": "Account shares 4 counterparties with 4 other account(s) (ring pattern)",
+      "evidence": {
+        "linked_accounts": [
+          2,
+          3,
+          4,
+          5
+        ],
+        "shared_counterparties": [
+          "acme ltd",
+          "global ltd",
+          "pay ltd",
+          "trade ltd"
+        ],
+        "overlap_count": 4,
+        "degree": 4,
+        "lookback_days": 30
+      },
+      "amount": 1314.91,
+      "currency": "USD",
+      "ts": "2026-02-13T21:47:49",
+      "account_id": 1,
+      "counterparty": "Trade Ltd",
+      "country": "USA"
+    },
+    {
+      "alert_id": 6,
+      "transaction_id": 2,
+      "rule_id": "NetworkRingIndicator",
+      "severity": "high",
+      "reason": "Account shares 3 counterparties with 4 other account(s) (ring pattern)",
+      "evidence": {
+        "linked_accounts": [
+          1,
+          3,
+          4,
+          5
+        ],
+        "shared_counterparties": [
+          "acme ltd",
+          "global ltd",
+          "pay ltd"
+        ],
+        "overlap_count": 3,
+        "degree": 4,
+        "lookback_days": 30
+      },
+      "amount": 565.29,
+      "currency": "USD",
+      "ts": "2026-02-13T23:47:49",
+      "account_id": 2,
+      "counterparty": "Acme Ltd",
+      "country": "GBR"
+    },
+    {
+      "alert_id": 7,
+      "transaction_id": 3,
+      "rule_id": "NetworkRingIndicator",
+      "severity": "high",
+      "reason": "Account shares 3 counterparties with 4 other account(s) (ring pattern)",
+      "evidence": {
+        "linked_accounts": [
+          1,
+          2,
+          4,
+          5
+        ],
+        "shared_counterparties": [
+          "global ltd",
+          "pay ltd",
+          "trade ltd"
+        ],
+        "overlap_count": 3,
+        "degree": 4,
+        "lookback_days": 30
+      },
+      "amount": 1385.73,
+      "currency": "USD",
+      "ts": "2026-02-14T01:47:49",
+      "account_id": 3,
+      "counterparty": "Pay Ltd",
+      "country": "FRA"
+    },
+    {
+      "alert_id": 8,
+      "transaction_id": 4,
+      "rule_id": "NetworkRingIndicator",
+      "severity": "high",
+      "reason": "Account shares 3 counterparties with 4 other account(s) (ring pattern)",
+      "evidence": {
+        "linked_accounts": [
+          1,
+          2,
+          3,
+          5
+        ],
+        "shared_counterparties": [
+          "global ltd",
+          "pay ltd",
+          "trade ltd"
+        ],
+        "overlap_count": 3,
+        "degree": 4,
+        "lookback_days": 30
+      },
+      "amount": 160.39,
+      "currency": "USD",
+      "ts": "2026-02-14T03:47:49",
+      "account_id": 4,
+      "counterparty": "Global Ltd",
+      "country": "DEU"
+    },
+    {
+      "alert_id": 9,
+      "transaction_id": 5,
+      "rule_id": "NetworkRingIndicator",
+      "severity": "high",
+      "reason": "Account shares 4 counterparties with 4 other account(s) (ring pattern)",
+      "evidence": {
+        "linked_accounts": [
+          1,
+          2,
+          3,
+          4
+        ],
+        "shared_counterparties": [
+          "acme ltd",
+          "global ltd",
+          "pay ltd",
+          "trade ltd"
+        ],
+        "overlap_count": 4,
+        "degree": 4,
+        "lookback_days": 30
+      },
+      "amount": 542.06,
+      "currency": "USD",
+      "ts": "2026-02-14T05:47:49",
+      "account_id": 5,
+      "counterparty": "Global Ltd",
+      "country": "IR"
+    },
+    {
+      "alert_id": 10,
+      "transaction_id": 31,
+      "rule_id": "HighValueTransaction",
+      "severity": "high",
+      "reason": "Transaction amount 50000.0 >= threshold 10000.0",
+      "evidence": {
+        "amount": 50000.0,
+        "threshold": 10000.0
+      },
+      "amount": 50000.0,
+      "currency": "USD",
+      "ts": "2026-02-14T21:47:49",
+      "account_id": 1,
+      "counterparty": "Big Payee",
+      "country": "USA"
+    },
+    {
+      "alert_id": 11,
+      "transaction_id": 32,
+      "rule_id": "SanctionsKeywordMatch",
+      "severity": "high",
+      "reason": "Counterparty name matches sanctions keyword: 'sanctioned'",
+      "evidence": {
+        "counterparty": "sanctioned entity",
+        "keyword": "sanctioned"
+      },
+      "amount": 1000.0,
+      "currency": "USD",
+      "ts": "2026-02-15T21:47:49",
+      "account_id": 2,
+      "counterparty": "sanctioned entity",
+      "country": "GBR"
+    },
+    {
+      "alert_id": 12,
+      "transaction_id": 37,
+      "rule_id": "RapidVelocity",
+      "severity": "medium",
+      "reason": "5 transactions from same account within 15 minutes",
+      "evidence": {
+        "count": 5,
+        "window_minutes": 15,
+        "account_id": 3
+      },
+      "amount": 500.0,
+      "currency": "EUR",
+      "ts": "2026-02-16T21:55:49",
+      "account_id": 3,
+      "counterparty": "Retail",
+      "country": "FRA"
+    },
+    {
+      "alert_id": 13,
+      "transaction_id": 38,
+      "rule_id": "RapidVelocity",
+      "severity": "medium",
+      "reason": "6 transactions from same account within 15 minutes",
+      "evidence": {
+        "count": 6,
+        "window_minutes": 15,
+        "account_id": 3
+      },
+      "amount": 500.0,
+      "currency": "EUR",
+      "ts": "2026-02-16T21:57:49",
+      "account_id": 3,
+      "counterparty": "Retail",
+      "country": "FRA"
+    },
+    {
+      "alert_id": 14,
+      "transaction_id": 71,
+      "rule_id": "HighValueTransaction",
+      "severity": "high",
+      "reason": "Transaction amount 50000.0 >= threshold 10000.0",
+      "evidence": {
+        "amount": 50000.0,
+        "threshold": 10000.0
+      },
+      "amount": 50000.0,
+      "currency": "USD",
+      "ts": "2026-02-14T22:30:38",
+      "account_id": 1,
+      "counterparty": "Big Payee",
+      "country": "USA"
+    },
+    {
+      "alert_id": 15,
+      "transaction_id": 72,
+      "rule_id": "SanctionsKeywordMatch",
+      "severity": "high",
+      "reason": "Counterparty name matches sanctions keyword: 'sanctioned'",
+      "evidence": {
+        "counterparty": "sanctioned entity",
+        "keyword": "sanctioned"
+      },
+      "amount": 1000.0,
+      "currency": "USD",
+      "ts": "2026-02-15T22:30:38",
+      "account_id": 2,
+      "counterparty": "sanctioned entity",
+      "country": "GBR"
+    },
+    {
+      "alert_id": 16,
+      "transaction_id": 77,
+      "rule_id": "RapidVelocity",
+      "severity": "medium",
+      "reason": "5 transactions from same account within 15 minutes",
+      "evidence": {
+        "count": 5,
+        "window_minutes": 15,
+        "account_id": 3
+      },
+      "amount": 500.0,
+      "currency": "EUR",
+      "ts": "2026-02-16T22:38:38",
+      "account_id": 3,
+      "counterparty": "Retail",
+      "country": "FRA"
+    },
+    {
+      "alert_id": 17,
+      "transaction_id": 78,
+      "rule_id": "RapidVelocity",
+      "severity": "medium",
+      "reason": "6 transactions from same account within 15 minutes",
+      "evidence": {
+        "count": 6,
+        "window_minutes": 15,
+        "account_id": 3
+      },
+      "amount": 500.0,
+      "currency": "EUR",
+      "ts": "2026-02-16T22:40:38",
+      "account_id": 3,
+      "counterparty": "Retail",
+      "country": "FRA"
+    },
+    {
+      "alert_id": 18,
+      "transaction_id": 1,
+      "rule_id": "NetworkRingIndicator",
+      "severity": "high",
+      "reason": "Account shares 4 counterparties with 4 other account(s) (ring pattern)",
+      "evidence": {
+        "linked_accounts": [
+          2,
+          3,
+          4,
+          5
+        ],
+        "shared_counterparties": [
+          "acme ltd",
+          "global ltd",
+          "pay ltd",
+          "trade ltd"
+        ],
+        "overlap_count": 4,
+        "degree": 4,
+        "lookback_days": 30
+      },
+      "amount": 1314.91,
+      "currency": "USD",
+      "ts": "2026-02-13T21:47:49",
+      "account_id": 1,
+      "counterparty": "Trade Ltd",
+      "country": "USA"
+    },
+    {
+      "alert_id": 19,
+      "transaction_id": 2,
+      "rule_id": "NetworkRingIndicator",
+      "severity": "high",
+      "reason": "Account shares 3 counterparties with 4 other account(s) (ring pattern)",
+      "evidence": {
+        "linked_accounts": [
+          1,
+          3,
+          4,
+          5
+        ],
+        "shared_counterparties": [
+          "acme ltd",
+          "global ltd",
+          "pay ltd"
+        ],
+        "overlap_count": 3,
+        "degree": 4,
+        "lookback_days": 30
+      },
+      "amount": 565.29,
+      "currency": "USD",
+      "ts": "2026-02-13T23:47:49",
+      "account_id": 2,
+      "counterparty": "Acme Ltd",
+      "country": "GBR"
+    },
+    {
+      "alert_id": 20,
+      "transaction_id": 3,
+      "rule_id": "NetworkRingIndicator",
+      "severity": "high",
+      "reason": "Account shares 3 counterparties with 4 other account(s) (ring pattern)",
+      "evidence": {
+        "linked_accounts": [
+          1,
+          2,
+          4,
+          5
+        ],
+        "shared_counterparties": [
+          "global ltd",
+          "pay ltd",
+          "trade ltd"
+        ],
+        "overlap_count": 3,
+        "degree": 4,
+        "lookback_days": 30
+      },
+      "amount": 1385.73,
+      "currency": "USD",
+      "ts": "2026-02-14T01:47:49",
+      "account_id": 3,
+      "counterparty": "Pay Ltd",
+      "country": "FRA"
+    },
+    {
+      "alert_id": 21,
+      "transaction_id": 4,
+      "rule_id": "NetworkRingIndicator",
+      "severity": "high",
+      "reason": "Account shares 3 counterparties with 4 other account(s) (ring pattern)",
+      "evidence": {
+        "linked_accounts": [
+          1,
+          2,
+          3,
+          5
+        ],
+        "shared_counterparties": [
+          "global ltd",
+          "pay ltd",
+          "trade ltd"
+        ],
+        "overlap_count": 3,
+        "degree": 4,
+        "lookback_days": 30
+      },
+      "amount": 160.39,
+      "currency": "USD",
+      "ts": "2026-02-14T03:47:49",
+      "account_id": 4,
+      "counterparty": "Global Ltd",
+      "country": "DEU"
+    },
+    {
+      "alert_id": 22,
+      "transaction_id": 5,
+      "rule_id": "NetworkRingIndicator",
+      "severity": "high",
+      "reason": "Account shares 4 counterparties with 4 other account(s) (ring pattern)",
+      "evidence": {
+        "linked_accounts": [
+          1,
+          2,
+          3,
+          4
+        ],
+        "shared_counterparties": [
+          "acme ltd",
+          "global ltd",
+          "pay ltd",
+          "trade ltd"
+        ],
+        "overlap_count": 4,
+        "degree": 4,
+        "lookback_days": 30
+      },
+      "amount": 542.06,
+      "currency": "USD",
+      "ts": "2026-02-14T05:47:49",
+      "account_id": 5,
+      "counterparty": "Global Ltd",
+      "country": "IR"
+    },
+    {
+      "alert_id": 23,
+      "transaction_id": 31,
+      "rule_id": "HighValueTransaction",
+      "severity": "high",
+      "reason": "Transaction amount 50000.0 >= threshold 10000.0",
+      "evidence": {
+        "amount": 50000.0,
+        "threshold": 10000.0
+      },
+      "amount": 50000.0,
+      "currency": "USD",
+      "ts": "2026-02-14T21:47:49",
+      "account_id": 1,
+      "counterparty": "Big Payee",
+      "country": "USA"
+    },
+    {
+      "alert_id": 24,
+      "transaction_id": 32,
+      "rule_id": "SanctionsKeywordMatch",
+      "severity": "high",
+      "reason": "Counterparty name matches sanctions keyword: 'sanctioned'",
+      "evidence": {
+        "counterparty": "sanctioned entity",
+        "keyword": "sanctioned"
+      },
+      "amount": 1000.0,
+      "currency": "USD",
+      "ts": "2026-02-15T21:47:49",
+      "account_id": 2,
+      "counterparty": "sanctioned entity",
+      "country": "GBR"
+    },
+    {
+      "alert_id": 25,
+      "transaction_id": 37,
+      "rule_id": "RapidVelocity",
+      "severity": "medium",
+      "reason": "5 transactions from same account within 15 minutes",
+      "evidence": {
+        "count": 5,
+        "window_minutes": 15,
+        "account_id": 3
+      },
+      "amount": 500.0,
+      "currency": "EUR",
+      "ts": "2026-02-16T21:55:49",
+      "account_id": 3,
+      "counterparty": "Retail",
+      "country": "FRA"
+    },
+    {
+      "alert_id": 26,
+      "transaction_id": 38,
+      "rule_id": "RapidVelocity",
+      "severity": "medium",
+      "reason": "6 transactions from same account within 15 minutes",
+      "evidence": {
+        "count": 6,
+        "window_minutes": 15,
+        "account_id": 3
+      },
+      "amount": 500.0,
+      "currency": "EUR",
+      "ts": "2026-02-16T21:57:49",
+      "account_id": 3,
+      "counterparty": "Retail",
+      "country": "FRA"
+    },
+    {
+      "alert_id": 27,
+      "transaction_id": 71,
+      "rule_id": "HighValueTransaction",
+      "severity": "high",
+      "reason": "Transaction amount 50000.0 >= threshold 10000.0",
+      "evidence": {
+        "amount": 50000.0,
+        "threshold": 10000.0
+      },
+      "amount": 50000.0,
+      "currency": "USD",
+      "ts": "2026-02-14T22:30:38",
+      "account_id": 1,
+      "counterparty": "Big Payee",
+      "country": "USA"
+    },
+    {
+      "alert_id": 28,
+      "transaction_id": 72,
+      "rule_id": "SanctionsKeywordMatch",
+      "severity": "high",
+      "reason": "Counterparty name matches sanctions keyword: 'sanctioned'",
+      "evidence": {
+        "counterparty": "sanctioned entity",
+        "keyword": "sanctioned"
+      },
+      "amount": 1000.0,
+      "currency": "USD",
+      "ts": "2026-02-15T22:30:38",
+      "account_id": 2,
+      "counterparty": "sanctioned entity",
+      "country": "GBR"
+    },
+    {
+      "alert_id": 29,
+      "transaction_id": 76,
+      "rule_id": "RapidVelocity",
+      "severity": "medium",
+      "reason": "7 transactions from same account within 15 minutes",
+      "evidence": {
+        "count": 7,
+        "window_minutes": 15,
+        "account_id": 3
+      },
+      "amount": 500.0,
+      "currency": "EUR",
+      "ts": "2026-02-16T22:36:38",
+      "account_id": 3,
+      "counterparty": "Retail",
+      "country": "FRA"
+    },
+    {
+      "alert_id": 30,
+      "transaction_id": 77,
+      "rule_id": "RapidVelocity",
+      "severity": "medium",
+      "reason": "10 transactions from same account within 15 minutes",
+      "evidence": {
+        "count": 10,
+        "window_minutes": 15,
+        "account_id": 3
+      },
+      "amount": 500.0,
+      "currency": "EUR",
+      "ts": "2026-02-16T22:38:38",
+      "account_id": 3,
+      "counterparty": "Retail",
+      "country": "FRA"
+    },
+    {
+      "alert_id": 33,
+      "transaction_id": 112,
+      "rule_id": "SanctionsKeywordMatch",
+      "severity": "high",
+      "reason": "Counterparty name matches sanctions keyword: 'sanctioned'",
+      "evidence": {
+        "counterparty": "sanctioned entity",
+        "keyword": "sanctioned"
+      },
+      "amount": 1000.0,
+      "currency": "USD",
+      "ts": "2026-02-15T22:33:13",
+      "account_id": 2,
+      "counterparty": "sanctioned entity",
+      "country": "GBR"
+    },
+    {
+      "alert_id": 31,
+      "transaction_id": 78,
+      "rule_id": "RapidVelocity",
+      "severity": "medium",
+      "reason": "13 transactions from same account within 15 minutes",
+      "evidence": {
+        "count": 13,
+        "window_minutes": 15,
+        "account_id": 3
+      },
+      "amount": 500.0,
+      "currency": "EUR",
+      "ts": "2026-02-16T22:40:38",
+      "account_id": 3,
+      "counterparty": "Retail",
+      "country": "FRA"
+    },
+    {
+      "alert_id": 32,
+      "transaction_id": 111,
+      "rule_id": "HighValueTransaction",
+      "severity": "high",
+      "reason": "Transaction amount 50000.0 >= threshold 10000.0",
+      "evidence": {
+        "amount": 50000.0,
+        "threshold": 10000.0
+      },
+      "amount": 50000.0,
+      "currency": "USD",
+      "ts": "2026-02-14T22:33:13",
+      "account_id": 1,
+      "counterparty": "Big Payee",
+      "country": "USA"
+    },
+    {
+      "alert_id": 34,
+      "transaction_id": 114,
+      "rule_id": "RapidVelocity",
+      "severity": "medium",
+      "reason": "6 transactions from same account within 15 minutes",
+      "evidence": {
+        "count": 6,
+        "window_minutes": 15,
+        "account_id": 3
+      },
+      "amount": 500.0,
+      "currency": "EUR",
+      "ts": "2026-02-16T22:35:13",
+      "account_id": 3,
+      "counterparty": "Retail",
+      "country": "FRA"
+    },
+    {
+      "alert_id": 35,
+      "transaction_id": 115,
+      "rule_id": "RapidVelocity",
+      "severity": "medium",
+      "reason": "9 transactions from same account within 15 minutes",
+      "evidence": {
+        "count": 9,
+        "window_minutes": 15,
+        "account_id": 3
+      },
+      "amount": 500.0,
+      "currency": "EUR",
+      "ts": "2026-02-16T22:37:13",
+      "account_id": 3,
+      "counterparty": "Retail",
+      "country": "FRA"
+    },
+    {
+      "alert_id": 36,
+      "transaction_id": 116,
+      "rule_id": "RapidVelocity",
+      "severity": "medium",
+      "reason": "12 transactions from same account within 15 minutes",
+      "evidence": {
+        "count": 12,
+        "window_minutes": 15,
+        "account_id": 3
+      },
+      "amount": 500.0,
+      "currency": "EUR",
+      "ts": "2026-02-16T22:39:13",
+      "account_id": 3,
+      "counterparty": "Retail",
+      "country": "FRA"
+    },
+    {
+      "alert_id": 37,
+      "transaction_id": 117,
+      "rule_id": "RapidVelocity",
+      "severity": "medium",
+      "reason": "15 transactions from same account within 15 minutes",
+      "evidence": {
+        "count": 15,
+        "window_minutes": 15,
+        "account_id": 3
+      },
+      "amount": 500.0,
+      "currency": "EUR",
+      "ts": "2026-02-16T22:41:13",
+      "account_id": 3,
+      "counterparty": "Retail",
+      "country": "FRA"
+    },
+    {
+      "alert_id": 38,
+      "transaction_id": 118,
+      "rule_id": "RapidVelocity",
+      "severity": "medium",
+      "reason": "17 transactions from same account within 15 minutes",
+      "evidence": {
+        "count": 17,
+        "window_minutes": 15,
+        "account_id": 3
+      },
+      "amount": 500.0,
+      "currency": "EUR",
+      "ts": "2026-02-16T22:43:13",
+      "account_id": 3,
+      "counterparty": "Retail",
+      "country": "FRA"
+    },
+    {
+      "alert_id": 39,
+      "transaction_id": 119,
+      "rule_id": "StructuringSmurfing",
+      "severity": "high",
+      "reason": "3 transactions just below threshold 9500.0 in 60 min",
+      "evidence": {
+        "count": 3,
+        "threshold": 9500.0,
+        "window_minutes": 60
+      },
+      "amount": 9200.0,
+      "currency": "USD",
+      "ts": "2026-02-17T22:38:13",
+      "account_id": 4,
+      "counterparty": "Split Pay",
+      "country": "DEU"
+    },
+    {
+      "alert_id": 40,
+      "transaction_id": 151,
+      "rule_id": "HighValueTransaction",
+      "severity": "high",
+      "reason": "Transaction amount 50000.0 >= threshold 10000.0",
+      "evidence": {
+        "amount": 50000.0,
+        "threshold": 10000.0
+      },
+      "amount": 50000.0,
+      "currency": "USD",
+      "ts": "2026-02-14T22:34:40",
+      "account_id": 1,
+      "counterparty": "Big Payee",
+      "country": "USA"
+    },
+    {
+      "alert_id": 41,
+      "transaction_id": 152,
+      "rule_id": "SanctionsKeywordMatch",
+      "severity": "high",
+      "reason": "Counterparty name matches sanctions keyword: 'sanctioned'",
+      "evidence": {
+        "counterparty": "sanctioned entity",
+        "keyword": "sanctioned"
+      },
+      "amount": 1000.0,
+      "currency": "USD",
+      "ts": "2026-02-15T22:34:40",
+      "account_id": 2,
+      "counterparty": "sanctioned entity",
+      "country": "GBR"
+    },
+    {
+      "alert_id": 42,
+      "transaction_id": 153,
+      "rule_id": "RapidVelocity",
+      "severity": "medium",
+      "reason": "5 transactions from same account within 15 minutes",
+      "evidence": {
+        "count": 5,
+        "window_minutes": 15,
+        "account_id": 3
+      },
+      "amount": 500.0,
+      "currency": "EUR",
+      "ts": "2026-02-16T22:34:40",
+      "account_id": 3,
+      "counterparty": "Retail",
+      "country": "FRA"
+    },
+    {
+      "alert_id": 43,
+      "transaction_id": 154,
+      "rule_id": "RapidVelocity",
+      "severity": "medium",
+      "reason": "8 transactions from same account within 15 minutes",
+      "evidence": {
+        "count": 8,
+        "window_minutes": 15,
+        "account_id": 3
+      },
+      "amount": 500.0,
+      "currency": "EUR",
+      "ts": "2026-02-16T22:36:40",
+      "account_id": 3,
+      "counterparty": "Retail",
+      "country": "FRA"
+    },
+    {
+      "alert_id": 44,
+      "transaction_id": 155,
+      "rule_id": "RapidVelocity",
+      "severity": "medium",
+      "reason": "11 transactions from same account within 15 minutes",
+      "evidence": {
+        "count": 11,
+        "window_minutes": 15,
+        "account_id": 3
+      },
+      "amount": 500.0,
+      "currency": "EUR",
+      "ts": "2026-02-16T22:38:40",
+      "account_id": 3,
+      "counterparty": "Retail",
+      "country": "FRA"
+    },
+    {
+      "alert_id": 45,
+      "transaction_id": 156,
+      "rule_id": "RapidVelocity",
+      "severity": "medium",
+      "reason": "14 transactions from same account within 15 minutes",
+      "evidence": {
+        "count": 14,
+        "window_minutes": 15,
+        "account_id": 3
+      },
+      "amount": 500.0,
+      "currency": "EUR",
+      "ts": "2026-02-16T22:40:40",
+      "account_id": 3,
+      "counterparty": "Retail",
+      "country": "FRA"
+    },
+    {
+      "alert_id": 46,
+      "transaction_id": 157,
+      "rule_id": "RapidVelocity",
+      "severity": "medium",
+      "reason": "16 transactions from same account within 15 minutes",
+      "evidence": {
+        "count": 16,
+        "window_minutes": 15,
+        "account_id": 3
+      },
+      "amount": 500.0,
+      "currency": "EUR",
+      "ts": "2026-02-16T22:42:40",
+      "account_id": 3,
+      "counterparty": "Retail",
+      "country": "FRA"
+    },
+    {
+      "alert_id": 48,
+      "transaction_id": 159,
+      "rule_id": "StructuringSmurfing",
+      "severity": "high",
+      "reason": "4 transactions just below threshold 9500.0 in 60 min",
+      "evidence": {
+        "count": 4,
+        "threshold": 9500.0,
+        "window_minutes": 60
+      },
+      "amount": 9200.0,
+      "currency": "USD",
+      "ts": "2026-02-17T22:39:40",
+      "account_id": 4,
+      "counterparty": "Split Pay",
+      "country": "DEU"
+    },
+    {
+      "alert_id": 47,
+      "transaction_id": 158,
+      "rule_id": "RapidVelocity",
+      "severity": "medium",
+      "reason": "18 transactions from same account within 15 minutes",
+      "evidence": {
+        "count": 18,
+        "window_minutes": 15,
+        "account_id": 3
+      },
+      "amount": 500.0,
+      "currency": "EUR",
+      "ts": "2026-02-16T22:44:40",
+      "account_id": 3,
+      "counterparty": "Retail",
+      "country": "FRA"
+    },
+    {
+      "alert_id": 49,
+      "transaction_id": 1,
+      "rule_id": "NetworkRingIndicator",
+      "severity": "high",
+      "reason": "Account shares 4 counterparties with 4 other account(s) (ring pattern)",
+      "evidence": {
+        "linked_accounts": [
+          2,
+          3,
+          4,
+          5
+        ],
+        "shared_counterparties": [
+          "acme ltd",
+          "global ltd",
+          "pay ltd",
+          "trade ltd"
+        ],
+        "overlap_count": 4,
+        "degree": 4,
+        "lookback_days": 30
+      },
+      "amount": 1314.91,
+      "currency": "USD",
+      "ts": "2026-02-13T21:47:49",
+      "account_id": 1,
+      "counterparty": "Trade Ltd",
+      "country": "USA"
+    },
+    {
+      "alert_id": 50,
+      "transaction_id": 2,
+      "rule_id": "NetworkRingIndicator",
+      "severity": "high",
+      "reason": "Account shares 3 counterparties with 4 other account(s) (ring pattern)",
+      "evidence": {
+        "linked_accounts": [
+          1,
+          3,
+          4,
+          5
+        ],
+        "shared_counterparties": [
+          "acme ltd",
+          "global ltd",
+          "pay ltd"
+        ],
+        "overlap_count": 3,
+        "degree": 4,
+        "lookback_days": 30
+      },
+      "amount": 565.29,
+      "currency": "USD",
+      "ts": "2026-02-13T23:47:49",
+      "account_id": 2,
+      "counterparty": "Acme Ltd",
+      "country": "GBR"
+    },
+    {
+      "alert_id": 51,
+      "transaction_id": 3,
+      "rule_id": "NetworkRingIndicator",
+      "severity": "high",
+      "reason": "Account shares 3 counterparties with 4 other account(s) (ring pattern)",
+      "evidence": {
+        "linked_accounts": [
+          1,
+          2,
+          4,
+          5
+        ],
+        "shared_counterparties": [
+          "global ltd",
+          "pay ltd",
+          "trade ltd"
+        ],
+        "overlap_count": 3,
+        "degree": 4,
+        "lookback_days": 30
+      },
+      "amount": 1385.73,
+      "currency": "USD",
+      "ts": "2026-02-14T01:47:49",
+      "account_id": 3,
+      "counterparty": "Pay Ltd",
+      "country": "FRA"
+    },
+    {
+      "alert_id": 52,
+      "transaction_id": 4,
+      "rule_id": "NetworkRingIndicator",
+      "severity": "high",
+      "reason": "Account shares 3 counterparties with 4 other account(s) (ring pattern)",
+      "evidence": {
+        "linked_accounts": [
+          1,
+          2,
+          3,
+          5
+        ],
+        "shared_counterparties": [
+          "global ltd",
+          "pay ltd",
+          "trade ltd"
+        ],
+        "overlap_count": 3,
+        "degree": 4,
+        "lookback_days": 30
+      },
+      "amount": 160.39,
+      "currency": "USD",
+      "ts": "2026-02-14T03:47:49",
+      "account_id": 4,
+      "counterparty": "Global Ltd",
+      "country": "DEU"
+    },
+    {
+      "alert_id": 53,
+      "transaction_id": 5,
+      "rule_id": "NetworkRingIndicator",
+      "severity": "high",
+      "reason": "Account shares 4 counterparties with 4 other account(s) (ring pattern)",
+      "evidence": {
+        "linked_accounts": [
+          1,
+          2,
+          3,
+          4
+        ],
+        "shared_counterparties": [
+          "acme ltd",
+          "global ltd",
+          "pay ltd",
+          "trade ltd"
+        ],
+        "overlap_count": 4,
+        "degree": 4,
+        "lookback_days": 30
+      },
+      "amount": 542.06,
+      "currency": "USD",
+      "ts": "2026-02-14T05:47:49",
+      "account_id": 5,
+      "counterparty": "Global Ltd",
+      "country": "IR"
+    },
+    {
+      "alert_id": 54,
+      "transaction_id": 31,
+      "rule_id": "HighValueTransaction",
+      "severity": "high",
+      "reason": "Transaction amount 50000.0 >= threshold 10000.0",
+      "evidence": {
+        "amount": 50000.0,
+        "threshold": 10000.0
+      },
+      "amount": 50000.0,
+      "currency": "USD",
+      "ts": "2026-02-14T21:47:49",
+      "account_id": 1,
+      "counterparty": "Big Payee",
+      "country": "USA"
+    },
+    {
+      "alert_id": 55,
+      "transaction_id": 32,
+      "rule_id": "SanctionsKeywordMatch",
+      "severity": "high",
+      "reason": "Counterparty name matches sanctions keyword: 'sanctioned'",
+      "evidence": {
+        "counterparty": "sanctioned entity",
+        "keyword": "sanctioned"
+      },
+      "amount": 1000.0,
+      "currency": "USD",
+      "ts": "2026-02-15T21:47:49",
+      "account_id": 2,
+      "counterparty": "sanctioned entity",
+      "country": "GBR"
+    },
+    {
+      "alert_id": 56,
+      "transaction_id": 37,
+      "rule_id": "RapidVelocity",
+      "severity": "medium",
+      "reason": "5 transactions from same account within 15 minutes",
+      "evidence": {
+        "count": 5,
+        "window_minutes": 15,
+        "account_id": 3
+      },
+      "amount": 500.0,
+      "currency": "EUR",
+      "ts": "2026-02-16T21:55:49",
+      "account_id": 3,
+      "counterparty": "Retail",
+      "country": "FRA"
+    },
+    {
+      "alert_id": 57,
+      "transaction_id": 38,
+      "rule_id": "RapidVelocity",
+      "severity": "medium",
+      "reason": "6 transactions from same account within 15 minutes",
+      "evidence": {
+        "count": 6,
+        "window_minutes": 15,
+        "account_id": 3
+      },
+      "amount": 500.0,
+      "currency": "EUR",
+      "ts": "2026-02-16T21:57:49",
+      "account_id": 3,
+      "counterparty": "Retail",
+      "country": "FRA"
+    },
+    {
+      "alert_id": 58,
+      "transaction_id": 71,
+      "rule_id": "HighValueTransaction",
+      "severity": "high",
+      "reason": "Transaction amount 50000.0 >= threshold 10000.0",
+      "evidence": {
+        "amount": 50000.0,
+        "threshold": 10000.0
+      },
+      "amount": 50000.0,
+      "currency": "USD",
+      "ts": "2026-02-14T22:30:38",
+      "account_id": 1,
+      "counterparty": "Big Payee",
+      "country": "USA"
+    },
+    {
+      "alert_id": 59,
+      "transaction_id": 72,
+      "rule_id": "SanctionsKeywordMatch",
+      "severity": "high",
+      "reason": "Counterparty name matches sanctions keyword: 'sanctioned'",
+      "evidence": {
+        "counterparty": "sanctioned entity",
+        "keyword": "sanctioned"
+      },
+      "amount": 1000.0,
+      "currency": "USD",
+      "ts": "2026-02-15T22:30:38",
+      "account_id": 2,
+      "counterparty": "sanctioned entity",
+      "country": "GBR"
+    },
+    {
+      "alert_id": 60,
+      "transaction_id": 76,
+      "rule_id": "RapidVelocity",
+      "severity": "medium",
+      "reason": "7 transactions from same account within 15 minutes",
+      "evidence": {
+        "count": 7,
+        "window_minutes": 15,
+        "account_id": 3
+      },
+      "amount": 500.0,
+      "currency": "EUR",
+      "ts": "2026-02-16T22:36:38",
+      "account_id": 3,
+      "counterparty": "Retail",
+      "country": "FRA"
+    },
+    {
+      "alert_id": 61,
+      "transaction_id": 77,
+      "rule_id": "RapidVelocity",
+      "severity": "medium",
+      "reason": "10 transactions from same account within 15 minutes",
+      "evidence": {
+        "count": 10,
+        "window_minutes": 15,
+        "account_id": 3
+      },
+      "amount": 500.0,
+      "currency": "EUR",
+      "ts": "2026-02-16T22:38:38",
+      "account_id": 3,
+      "counterparty": "Retail",
+      "country": "FRA"
+    },
+    {
+      "alert_id": 62,
+      "transaction_id": 78,
+      "rule_id": "RapidVelocity",
+      "severity": "medium",
+      "reason": "13 transactions from same account within 15 minutes",
+      "evidence": {
+        "count": 13,
+        "window_minutes": 15,
+        "account_id": 3
+      },
+      "amount": 500.0,
+      "currency": "EUR",
+      "ts": "2026-02-16T22:40:38",
+      "account_id": 3,
+      "counterparty": "Retail",
+      "country": "FRA"
+    },
+    {
+      "alert_id": 63,
+      "transaction_id": 111,
+      "rule_id": "HighValueTransaction",
+      "severity": "high",
+      "reason": "Transaction amount 50000.0 >= threshold 10000.0",
+      "evidence": {
+        "amount": 50000.0,
+        "threshold": 10000.0
+      },
+      "amount": 50000.0,
+      "currency": "USD",
+      "ts": "2026-02-14T22:33:13",
+      "account_id": 1,
+      "counterparty": "Big Payee",
+      "country": "USA"
+    },
+    {
+      "alert_id": 64,
+      "transaction_id": 112,
+      "rule_id": "SanctionsKeywordMatch",
+      "severity": "high",
+      "reason": "Counterparty name matches sanctions keyword: 'sanctioned'",
+      "evidence": {
+        "counterparty": "sanctioned entity",
+        "keyword": "sanctioned"
+      },
+      "amount": 1000.0,
+      "currency": "USD",
+      "ts": "2026-02-15T22:33:13",
+      "account_id": 2,
+      "counterparty": "sanctioned entity",
+      "country": "GBR"
+    },
+    {
+      "alert_id": 65,
+      "transaction_id": 114,
+      "rule_id": "RapidVelocity",
+      "severity": "medium",
+      "reason": "6 transactions from same account within 15 minutes",
+      "evidence": {
+        "count": 6,
+        "window_minutes": 15,
+        "account_id": 3
+      },
+      "amount": 500.0,
+      "currency": "EUR",
+      "ts": "2026-02-16T22:35:13",
+      "account_id": 3,
+      "counterparty": "Retail",
+      "country": "FRA"
+    },
+    {
+      "alert_id": 67,
+      "transaction_id": 116,
+      "rule_id": "RapidVelocity",
+      "severity": "medium",
+      "reason": "12 transactions from same account within 15 minutes",
+      "evidence": {
+        "count": 12,
+        "window_minutes": 15,
+        "account_id": 3
+      },
+      "amount": 500.0,
+      "currency": "EUR",
+      "ts": "2026-02-16T22:39:13",
+      "account_id": 3,
+      "counterparty": "Retail",
+      "country": "FRA"
+    },
+    {
+      "alert_id": 66,
+      "transaction_id": 115,
+      "rule_id": "RapidVelocity",
+      "severity": "medium",
+      "reason": "9 transactions from same account within 15 minutes",
+      "evidence": {
+        "count": 9,
+        "window_minutes": 15,
+        "account_id": 3
+      },
+      "amount": 500.0,
+      "currency": "EUR",
+      "ts": "2026-02-16T22:37:13",
+      "account_id": 3,
+      "counterparty": "Retail",
+      "country": "FRA"
+    },
+    {
+      "alert_id": 68,
+      "transaction_id": 117,
+      "rule_id": "RapidVelocity",
+      "severity": "medium",
+      "reason": "15 transactions from same account within 15 minutes",
+      "evidence": {
+        "count": 15,
+        "window_minutes": 15,
+        "account_id": 3
+      },
+      "amount": 500.0,
+      "currency": "EUR",
+      "ts": "2026-02-16T22:41:13",
+      "account_id": 3,
+      "counterparty": "Retail",
+      "country": "FRA"
+    },
+    {
+      "alert_id": 69,
+      "transaction_id": 118,
+      "rule_id": "RapidVelocity",
+      "severity": "medium",
+      "reason": "17 transactions from same account within 15 minutes",
+      "evidence": {
+        "count": 17,
+        "window_minutes": 15,
+        "account_id": 3
+      },
+      "amount": 500.0,
+      "currency": "EUR",
+      "ts": "2026-02-16T22:43:13",
+      "account_id": 3,
+      "counterparty": "Retail",
+      "country": "FRA"
+    },
+    {
+      "alert_id": 70,
+      "transaction_id": 119,
+      "rule_id": "StructuringSmurfing",
+      "severity": "high",
+      "reason": "3 transactions just below threshold 9500.0 in 60 min",
+      "evidence": {
+        "count": 3,
+        "threshold": 9500.0,
+        "window_minutes": 60
+      },
+      "amount": 9200.0,
+      "currency": "USD",
+      "ts": "2026-02-17T22:38:13",
+      "account_id": 4,
+      "counterparty": "Split Pay",
+      "country": "DEU"
+    },
+    {
+      "alert_id": 71,
+      "transaction_id": 151,
+      "rule_id": "HighValueTransaction",
+      "severity": "high",
+      "reason": "Transaction amount 50000.0 >= threshold 10000.0",
+      "evidence": {
+        "amount": 50000.0,
+        "threshold": 10000.0
+      },
+      "amount": 50000.0,
+      "currency": "USD",
+      "ts": "2026-02-14T22:34:40",
+      "account_id": 1,
+      "counterparty": "Big Payee",
+      "country": "USA"
+    },
+    {
+      "alert_id": 73,
+      "transaction_id": 153,
+      "rule_id": "RapidVelocity",
+      "severity": "medium",
+      "reason": "5 transactions from same account within 15 minutes",
+      "evidence": {
+        "count": 5,
+        "window_minutes": 15,
+        "account_id": 3
+      },
+      "amount": 500.0,
+      "currency": "EUR",
+      "ts": "2026-02-16T22:34:40",
+      "account_id": 3,
+      "counterparty": "Retail",
+      "country": "FRA"
+    },
+    {
+      "alert_id": 72,
+      "transaction_id": 152,
+      "rule_id": "SanctionsKeywordMatch",
+      "severity": "high",
+      "reason": "Counterparty name matches sanctions keyword: 'sanctioned'",
+      "evidence": {
+        "counterparty": "sanctioned entity",
+        "keyword": "sanctioned"
+      },
+      "amount": 1000.0,
+      "currency": "USD",
+      "ts": "2026-02-15T22:34:40",
+      "account_id": 2,
+      "counterparty": "sanctioned entity",
+      "country": "GBR"
+    },
+    {
+      "alert_id": 74,
+      "transaction_id": 154,
+      "rule_id": "RapidVelocity",
+      "severity": "medium",
+      "reason": "8 transactions from same account within 15 minutes",
+      "evidence": {
+        "count": 8,
+        "window_minutes": 15,
+        "account_id": 3
+      },
+      "amount": 500.0,
+      "currency": "EUR",
+      "ts": "2026-02-16T22:36:40",
+      "account_id": 3,
+      "counterparty": "Retail",
+      "country": "FRA"
+    },
+    {
+      "alert_id": 75,
+      "transaction_id": 155,
+      "rule_id": "RapidVelocity",
+      "severity": "medium",
+      "reason": "11 transactions from same account within 15 minutes",
+      "evidence": {
+        "count": 11,
+        "window_minutes": 15,
+        "account_id": 3
+      },
+      "amount": 500.0,
+      "currency": "EUR",
+      "ts": "2026-02-16T22:38:40",
+      "account_id": 3,
+      "counterparty": "Retail",
+      "country": "FRA"
+    },
+    {
+      "alert_id": 76,
+      "transaction_id": 156,
+      "rule_id": "RapidVelocity",
+      "severity": "medium",
+      "reason": "14 transactions from same account within 15 minutes",
+      "evidence": {
+        "count": 14,
+        "window_minutes": 15,
+        "account_id": 3
+      },
+      "amount": 500.0,
+      "currency": "EUR",
+      "ts": "2026-02-16T22:40:40",
+      "account_id": 3,
+      "counterparty": "Retail",
+      "country": "FRA"
+    },
+    {
+      "alert_id": 80,
+      "transaction_id": 191,
+      "rule_id": "HighValueTransaction",
+      "severity": "high",
+      "reason": "Transaction amount 50000.0 >= threshold 10000.0",
+      "evidence": {
+        "amount": 50000.0,
+        "threshold": 10000.0
+      },
+      "amount": 50000.0,
+      "currency": "USD",
+      "ts": "2026-02-14T22:45:02",
+      "account_id": 1,
+      "counterparty": "Big Payee",
+      "country": "USA"
+    },
+    {
+      "alert_id": 77,
+      "transaction_id": 157,
+      "rule_id": "RapidVelocity",
+      "severity": "medium",
+      "reason": "16 transactions from same account within 15 minutes",
+      "evidence": {
+        "count": 16,
+        "window_minutes": 15,
+        "account_id": 3
+      },
+      "amount": 500.0,
+      "currency": "EUR",
+      "ts": "2026-02-16T22:42:40",
+      "account_id": 3,
+      "counterparty": "Retail",
+      "country": "FRA"
+    },
+    {
+      "alert_id": 78,
+      "transaction_id": 158,
+      "rule_id": "RapidVelocity",
+      "severity": "medium",
+      "reason": "18 transactions from same account within 15 minutes",
+      "evidence": {
+        "count": 18,
+        "window_minutes": 15,
+        "account_id": 3
+      },
+      "amount": 500.0,
+      "currency": "EUR",
+      "ts": "2026-02-16T22:44:40",
+      "account_id": 3,
+      "counterparty": "Retail",
+      "country": "FRA"
+    },
+    {
+      "alert_id": 79,
+      "transaction_id": 159,
+      "rule_id": "StructuringSmurfing",
+      "severity": "high",
+      "reason": "4 transactions just below threshold 9500.0 in 60 min",
+      "evidence": {
+        "count": 4,
+        "threshold": 9500.0,
+        "window_minutes": 60
+      },
+      "amount": 9200.0,
+      "currency": "USD",
+      "ts": "2026-02-17T22:39:40",
+      "account_id": 4,
+      "counterparty": "Split Pay",
+      "country": "DEU"
+    },
+    {
+      "alert_id": 81,
+      "transaction_id": 192,
+      "rule_id": "SanctionsKeywordMatch",
+      "severity": "high",
+      "reason": "Counterparty name matches sanctions keyword: 'sanctioned'",
+      "evidence": {
+        "counterparty": "sanctioned entity",
+        "keyword": "sanctioned"
+      },
+      "amount": 1000.0,
+      "currency": "USD",
+      "ts": "2026-02-15T22:45:02",
+      "account_id": 2,
+      "counterparty": "sanctioned entity",
+      "country": "GBR"
+    },
+    {
+      "alert_id": 82,
+      "transaction_id": 193,
+      "rule_id": "RapidVelocity",
+      "severity": "medium",
+      "reason": "19 transactions from same account within 15 minutes",
+      "evidence": {
+        "count": 19,
+        "window_minutes": 15,
+        "account_id": 3
+      },
+      "amount": 500.0,
+      "currency": "EUR",
+      "ts": "2026-02-16T22:45:02",
+      "account_id": 3,
+      "counterparty": "Retail",
+      "country": "FRA"
+    },
+    {
+      "alert_id": 83,
+      "transaction_id": 194,
+      "rule_id": "RapidVelocity",
+      "severity": "medium",
+      "reason": "19 transactions from same account within 15 minutes",
+      "evidence": {
+        "count": 19,
+        "window_minutes": 15,
+        "account_id": 3
+      },
+      "amount": 500.0,
+      "currency": "EUR",
+      "ts": "2026-02-16T22:47:02",
+      "account_id": 3,
+      "counterparty": "Retail",
+      "country": "FRA"
+    },
+    {
+      "alert_id": 84,
+      "transaction_id": 195,
+      "rule_id": "RapidVelocity",
+      "severity": "medium",
+      "reason": "18 transactions from same account within 15 minutes",
+      "evidence": {
+        "count": 18,
+        "window_minutes": 15,
+        "account_id": 3
+      },
+      "amount": 500.0,
+      "currency": "EUR",
+      "ts": "2026-02-16T22:49:02",
+      "account_id": 3,
+      "counterparty": "Retail",
+      "country": "FRA"
+    },
+    {
+      "alert_id": 85,
+      "transaction_id": 196,
+      "rule_id": "RapidVelocity",
+      "severity": "medium",
+      "reason": "16 transactions from same account within 15 minutes",
+      "evidence": {
+        "count": 16,
+        "window_minutes": 15,
+        "account_id": 3
+      },
+      "amount": 500.0,
+      "currency": "EUR",
+      "ts": "2026-02-16T22:51:02",
+      "account_id": 3,
+      "counterparty": "Retail",
+      "country": "FRA"
+    },
+    {
+      "alert_id": 86,
+      "transaction_id": 197,
+      "rule_id": "RapidVelocity",
+      "severity": "medium",
+      "reason": "14 transactions from same account within 15 minutes",
+      "evidence": {
+        "count": 14,
+        "window_minutes": 15,
+        "account_id": 3
+      },
+      "amount": 500.0,
+      "currency": "EUR",
+      "ts": "2026-02-16T22:53:02",
+      "account_id": 3,
+      "counterparty": "Retail",
+      "country": "FRA"
+    },
+    {
+      "alert_id": 88,
+      "transaction_id": 199,
+      "rule_id": "StructuringSmurfing",
+      "severity": "high",
+      "reason": "5 transactions just below threshold 9500.0 in 60 min",
+      "evidence": {
+        "count": 5,
+        "threshold": 9500.0,
+        "window_minutes": 60
+      },
+      "amount": 9200.0,
+      "currency": "USD",
+      "ts": "2026-02-17T22:50:02",
+      "account_id": 4,
+      "counterparty": "Split Pay",
+      "country": "DEU"
+    },
+    {
+      "alert_id": 87,
+      "transaction_id": 198,
+      "rule_id": "RapidVelocity",
+      "severity": "medium",
+      "reason": "12 transactions from same account within 15 minutes",
+      "evidence": {
+        "count": 12,
+        "window_minutes": 15,
+        "account_id": 3
+      },
+      "amount": 500.0,
+      "currency": "EUR",
+      "ts": "2026-02-16T22:55:02",
+      "account_id": 3,
+      "counterparty": "Retail",
+      "country": "FRA"
+    },
+    {
+      "alert_id": 89,
+      "transaction_id": 1,
+      "rule_id": "NetworkRingIndicator",
+      "severity": "high",
+      "reason": "Account shares 4 counterparties with 4 other account(s) (ring pattern)",
+      "evidence": {
+        "linked_accounts": [
+          2,
+          3,
+          4,
+          5
+        ],
+        "shared_counterparties": [
+          "acme ltd",
+          "global ltd",
+          "pay ltd",
+          "trade ltd"
+        ],
+        "overlap_count": 4,
+        "degree": 4,
+        "lookback_days": 30
+      },
+      "amount": 1314.91,
+      "currency": "USD",
+      "ts": "2026-02-13T21:47:49",
+      "account_id": 1,
+      "counterparty": "Trade Ltd",
+      "country": "USA"
+    },
+    {
+      "alert_id": 90,
+      "transaction_id": 2,
+      "rule_id": "NetworkRingIndicator",
+      "severity": "high",
+      "reason": "Account shares 3 counterparties with 4 other account(s) (ring pattern)",
+      "evidence": {
+        "linked_accounts": [
+          1,
+          3,
+          4,
+          5
+        ],
+        "shared_counterparties": [
+          "acme ltd",
+          "global ltd",
+          "pay ltd"
+        ],
+        "overlap_count": 3,
+        "degree": 4,
+        "lookback_days": 30
+      },
+      "amount": 565.29,
+      "currency": "USD",
+      "ts": "2026-02-13T23:47:49",
+      "account_id": 2,
+      "counterparty": "Acme Ltd",
+      "country": "GBR"
+    },
+    {
+      "alert_id": 91,
+      "transaction_id": 3,
+      "rule_id": "NetworkRingIndicator",
+      "severity": "high",
+      "reason": "Account shares 3 counterparties with 4 other account(s) (ring pattern)",
+      "evidence": {
+        "linked_accounts": [
+          1,
+          2,
+          4,
+          5
+        ],
+        "shared_counterparties": [
+          "global ltd",
+          "pay ltd",
+          "trade ltd"
+        ],
+        "overlap_count": 3,
+        "degree": 4,
+        "lookback_days": 30
+      },
+      "amount": 1385.73,
+      "currency": "USD",
+      "ts": "2026-02-14T01:47:49",
+      "account_id": 3,
+      "counterparty": "Pay Ltd",
+      "country": "FRA"
+    },
+    {
+      "alert_id": 94,
+      "transaction_id": 31,
+      "rule_id": "HighValueTransaction",
+      "severity": "high",
+      "reason": "Transaction amount 50000.0 >= threshold 10000.0",
+      "evidence": {
+        "amount": 50000.0,
+        "threshold": 10000.0
+      },
+      "amount": 50000.0,
+      "currency": "USD",
+      "ts": "2026-02-14T21:47:49",
+      "account_id": 1,
+      "counterparty": "Big Payee",
+      "country": "USA"
+    },
+    {
+      "alert_id": 92,
+      "transaction_id": 4,
+      "rule_id": "NetworkRingIndicator",
+      "severity": "high",
+      "reason": "Account shares 3 counterparties with 4 other account(s) (ring pattern)",
+      "evidence": {
+        "linked_accounts": [
+          1,
+          2,
+          3,
+          5
+        ],
+        "shared_counterparties": [
+          "global ltd",
+          "pay ltd",
+          "trade ltd"
+        ],
+        "overlap_count": 3,
+        "degree": 4,
+        "lookback_days": 30
+      },
+      "amount": 160.39,
+      "currency": "USD",
+      "ts": "2026-02-14T03:47:49",
+      "account_id": 4,
+      "counterparty": "Global Ltd",
+      "country": "DEU"
+    },
+    {
+      "alert_id": 93,
+      "transaction_id": 5,
+      "rule_id": "NetworkRingIndicator",
+      "severity": "high",
+      "reason": "Account shares 4 counterparties with 4 other account(s) (ring pattern)",
+      "evidence": {
+        "linked_accounts": [
+          1,
+          2,
+          3,
+          4
+        ],
+        "shared_counterparties": [
+          "acme ltd",
+          "global ltd",
+          "pay ltd",
+          "trade ltd"
+        ],
+        "overlap_count": 4,
+        "degree": 4,
+        "lookback_days": 30
+      },
+      "amount": 542.06,
+      "currency": "USD",
+      "ts": "2026-02-14T05:47:49",
+      "account_id": 5,
+      "counterparty": "Global Ltd",
+      "country": "IR"
+    },
+    {
+      "alert_id": 95,
+      "transaction_id": 32,
+      "rule_id": "SanctionsKeywordMatch",
+      "severity": "high",
+      "reason": "Counterparty name matches sanctions keyword: 'sanctioned'",
+      "evidence": {
+        "counterparty": "sanctioned entity",
+        "keyword": "sanctioned"
+      },
+      "amount": 1000.0,
+      "currency": "USD",
+      "ts": "2026-02-15T21:47:49",
+      "account_id": 2,
+      "counterparty": "sanctioned entity",
+      "country": "GBR"
+    },
+    {
+      "alert_id": 97,
+      "transaction_id": 38,
+      "rule_id": "RapidVelocity",
+      "severity": "medium",
+      "reason": "6 transactions from same account within 15 minutes",
+      "evidence": {
+        "count": 6,
+        "window_minutes": 15,
+        "account_id": 3
+      },
+      "amount": 500.0,
+      "currency": "EUR",
+      "ts": "2026-02-16T21:57:49",
+      "account_id": 3,
+      "counterparty": "Retail",
+      "country": "FRA"
+    },
+    {
+      "alert_id": 96,
+      "transaction_id": 37,
+      "rule_id": "RapidVelocity",
+      "severity": "medium",
+      "reason": "5 transactions from same account within 15 minutes",
+      "evidence": {
+        "count": 5,
+        "window_minutes": 15,
+        "account_id": 3
+      },
+      "amount": 500.0,
+      "currency": "EUR",
+      "ts": "2026-02-16T21:55:49",
+      "account_id": 3,
+      "counterparty": "Retail",
+      "country": "FRA"
+    },
+    {
+      "alert_id": 98,
+      "transaction_id": 71,
+      "rule_id": "HighValueTransaction",
+      "severity": "high",
+      "reason": "Transaction amount 50000.0 >= threshold 10000.0",
+      "evidence": {
+        "amount": 50000.0,
+        "threshold": 10000.0
+      },
+      "amount": 50000.0,
+      "currency": "USD",
+      "ts": "2026-02-14T22:30:38",
+      "account_id": 1,
+      "counterparty": "Big Payee",
+      "country": "USA"
+    },
+    {
+      "alert_id": 100,
+      "transaction_id": 76,
+      "rule_id": "RapidVelocity",
+      "severity": "medium",
+      "reason": "7 transactions from same account within 15 minutes",
+      "evidence": {
+        "count": 7,
+        "window_minutes": 15,
+        "account_id": 3
+      },
+      "amount": 500.0,
+      "currency": "EUR",
+      "ts": "2026-02-16T22:36:38",
+      "account_id": 3,
+      "counterparty": "Retail",
+      "country": "FRA"
+    },
+    {
+      "alert_id": 99,
+      "transaction_id": 72,
+      "rule_id": "SanctionsKeywordMatch",
+      "severity": "high",
+      "reason": "Counterparty name matches sanctions keyword: 'sanctioned'",
+      "evidence": {
+        "counterparty": "sanctioned entity",
+        "keyword": "sanctioned"
+      },
+      "amount": 1000.0,
+      "currency": "USD",
+      "ts": "2026-02-15T22:30:38",
+      "account_id": 2,
+      "counterparty": "sanctioned entity",
+      "country": "GBR"
+    },
+    {
+      "alert_id": 101,
+      "transaction_id": 77,
+      "rule_id": "RapidVelocity",
+      "severity": "medium",
+      "reason": "10 transactions from same account within 15 minutes",
+      "evidence": {
+        "count": 10,
+        "window_minutes": 15,
+        "account_id": 3
+      },
+      "amount": 500.0,
+      "currency": "EUR",
+      "ts": "2026-02-16T22:38:38",
+      "account_id": 3,
+      "counterparty": "Retail",
+      "country": "FRA"
+    },
+    {
+      "alert_id": 104,
+      "transaction_id": 112,
+      "rule_id": "SanctionsKeywordMatch",
+      "severity": "high",
+      "reason": "Counterparty name matches sanctions keyword: 'sanctioned'",
+      "evidence": {
+        "counterparty": "sanctioned entity",
+        "keyword": "sanctioned"
+      },
+      "amount": 1000.0,
+      "currency": "USD",
+      "ts": "2026-02-15T22:33:13",
+      "account_id": 2,
+      "counterparty": "sanctioned entity",
+      "country": "GBR"
+    },
+    {
+      "alert_id": 102,
+      "transaction_id": 78,
+      "rule_id": "RapidVelocity",
+      "severity": "medium",
+      "reason": "13 transactions from same account within 15 minutes",
+      "evidence": {
+        "count": 13,
+        "window_minutes": 15,
+        "account_id": 3
+      },
+      "amount": 500.0,
+      "currency": "EUR",
+      "ts": "2026-02-16T22:40:38",
+      "account_id": 3,
+      "counterparty": "Retail",
+      "country": "FRA"
+    },
+    {
+      "alert_id": 103,
+      "transaction_id": 111,
+      "rule_id": "HighValueTransaction",
+      "severity": "high",
+      "reason": "Transaction amount 50000.0 >= threshold 10000.0",
+      "evidence": {
+        "amount": 50000.0,
+        "threshold": 10000.0
+      },
+      "amount": 50000.0,
+      "currency": "USD",
+      "ts": "2026-02-14T22:33:13",
+      "account_id": 1,
+      "counterparty": "Big Payee",
+      "country": "USA"
+    },
+    {
+      "alert_id": 105,
+      "transaction_id": 114,
+      "rule_id": "RapidVelocity",
+      "severity": "medium",
+      "reason": "6 transactions from same account within 15 minutes",
+      "evidence": {
+        "count": 6,
+        "window_minutes": 15,
+        "account_id": 3
+      },
+      "amount": 500.0,
+      "currency": "EUR",
+      "ts": "2026-02-16T22:35:13",
+      "account_id": 3,
+      "counterparty": "Retail",
+      "country": "FRA"
+    },
+    {
+      "alert_id": 107,
+      "transaction_id": 116,
+      "rule_id": "RapidVelocity",
+      "severity": "medium",
+      "reason": "12 transactions from same account within 15 minutes",
+      "evidence": {
+        "count": 12,
+        "window_minutes": 15,
+        "account_id": 3
+      },
+      "amount": 500.0,
+      "currency": "EUR",
+      "ts": "2026-02-16T22:39:13",
+      "account_id": 3,
+      "counterparty": "Retail",
+      "country": "FRA"
+    },
+    {
+      "alert_id": 106,
+      "transaction_id": 115,
+      "rule_id": "RapidVelocity",
+      "severity": "medium",
+      "reason": "9 transactions from same account within 15 minutes",
+      "evidence": {
+        "count": 9,
+        "window_minutes": 15,
+        "account_id": 3
+      },
+      "amount": 500.0,
+      "currency": "EUR",
+      "ts": "2026-02-16T22:37:13",
+      "account_id": 3,
+      "counterparty": "Retail",
+      "country": "FRA"
+    },
+    {
+      "alert_id": 108,
+      "transaction_id": 117,
+      "rule_id": "RapidVelocity",
+      "severity": "medium",
+      "reason": "15 transactions from same account within 15 minutes",
+      "evidence": {
+        "count": 15,
+        "window_minutes": 15,
+        "account_id": 3
+      },
+      "amount": 500.0,
+      "currency": "EUR",
+      "ts": "2026-02-16T22:41:13",
+      "account_id": 3,
+      "counterparty": "Retail",
+      "country": "FRA"
+    },
+    {
+      "alert_id": 110,
+      "transaction_id": 119,
+      "rule_id": "StructuringSmurfing",
+      "severity": "high",
+      "reason": "3 transactions just below threshold 9500.0 in 60 min",
+      "evidence": {
+        "count": 3,
+        "threshold": 9500.0,
+        "window_minutes": 60
+      },
+      "amount": 9200.0,
+      "currency": "USD",
+      "ts": "2026-02-17T22:38:13",
+      "account_id": 4,
+      "counterparty": "Split Pay",
+      "country": "DEU"
+    },
+    {
+      "alert_id": 109,
+      "transaction_id": 118,
+      "rule_id": "RapidVelocity",
+      "severity": "medium",
+      "reason": "17 transactions from same account within 15 minutes",
+      "evidence": {
+        "count": 17,
+        "window_minutes": 15,
+        "account_id": 3
+      },
+      "amount": 500.0,
+      "currency": "EUR",
+      "ts": "2026-02-16T22:43:13",
+      "account_id": 3,
+      "counterparty": "Retail",
+      "country": "FRA"
+    },
+    {
+      "alert_id": 111,
+      "transaction_id": 151,
+      "rule_id": "HighValueTransaction",
+      "severity": "high",
+      "reason": "Transaction amount 50000.0 >= threshold 10000.0",
+      "evidence": {
+        "amount": 50000.0,
+        "threshold": 10000.0
+      },
+      "amount": 50000.0,
+      "currency": "USD",
+      "ts": "2026-02-14T22:34:40",
+      "account_id": 1,
+      "counterparty": "Big Payee",
+      "country": "USA"
+    },
+    {
+      "alert_id": 113,
+      "transaction_id": 153,
+      "rule_id": "RapidVelocity",
+      "severity": "medium",
+      "reason": "5 transactions from same account within 15 minutes",
+      "evidence": {
+        "count": 5,
+        "window_minutes": 15,
+        "account_id": 3
+      },
+      "amount": 500.0,
+      "currency": "EUR",
+      "ts": "2026-02-16T22:34:40",
+      "account_id": 3,
+      "counterparty": "Retail",
+      "country": "FRA"
+    },
+    {
+      "alert_id": 112,
+      "transaction_id": 152,
+      "rule_id": "SanctionsKeywordMatch",
+      "severity": "high",
+      "reason": "Counterparty name matches sanctions keyword: 'sanctioned'",
+      "evidence": {
+        "counterparty": "sanctioned entity",
+        "keyword": "sanctioned"
+      },
+      "amount": 1000.0,
+      "currency": "USD",
+      "ts": "2026-02-15T22:34:40",
+      "account_id": 2,
+      "counterparty": "sanctioned entity",
+      "country": "GBR"
+    },
+    {
+      "alert_id": 114,
+      "transaction_id": 154,
+      "rule_id": "RapidVelocity",
+      "severity": "medium",
+      "reason": "8 transactions from same account within 15 minutes",
+      "evidence": {
+        "count": 8,
+        "window_minutes": 15,
+        "account_id": 3
+      },
+      "amount": 500.0,
+      "currency": "EUR",
+      "ts": "2026-02-16T22:36:40",
+      "account_id": 3,
+      "counterparty": "Retail",
+      "country": "FRA"
+    },
+    {
+      "alert_id": 115,
+      "transaction_id": 155,
+      "rule_id": "RapidVelocity",
+      "severity": "medium",
+      "reason": "11 transactions from same account within 15 minutes",
+      "evidence": {
+        "count": 11,
+        "window_minutes": 15,
+        "account_id": 3
+      },
+      "amount": 500.0,
+      "currency": "EUR",
+      "ts": "2026-02-16T22:38:40",
+      "account_id": 3,
+      "counterparty": "Retail",
+      "country": "FRA"
+    },
+    {
+      "alert_id": 116,
+      "transaction_id": 156,
+      "rule_id": "RapidVelocity",
+      "severity": "medium",
+      "reason": "14 transactions from same account within 15 minutes",
+      "evidence": {
+        "count": 14,
+        "window_minutes": 15,
+        "account_id": 3
+      },
+      "amount": 500.0,
+      "currency": "EUR",
+      "ts": "2026-02-16T22:40:40",
+      "account_id": 3,
+      "counterparty": "Retail",
+      "country": "FRA"
+    },
+    {
+      "alert_id": 117,
+      "transaction_id": 157,
+      "rule_id": "RapidVelocity",
+      "severity": "medium",
+      "reason": "16 transactions from same account within 15 minutes",
+      "evidence": {
+        "count": 16,
+        "window_minutes": 15,
+        "account_id": 3
+      },
+      "amount": 500.0,
+      "currency": "EUR",
+      "ts": "2026-02-16T22:42:40",
+      "account_id": 3,
+      "counterparty": "Retail",
+      "country": "FRA"
+    },
+    {
+      "alert_id": 118,
+      "transaction_id": 158,
+      "rule_id": "RapidVelocity",
+      "severity": "medium",
+      "reason": "18 transactions from same account within 15 minutes",
+      "evidence": {
+        "count": 18,
+        "window_minutes": 15,
+        "account_id": 3
+      },
+      "amount": 500.0,
+      "currency": "EUR",
+      "ts": "2026-02-16T22:44:40",
+      "account_id": 3,
+      "counterparty": "Retail",
+      "country": "FRA"
+    },
+    {
+      "alert_id": 119,
+      "transaction_id": 159,
+      "rule_id": "StructuringSmurfing",
+      "severity": "high",
+      "reason": "4 transactions just below threshold 9500.0 in 60 min",
+      "evidence": {
+        "count": 4,
+        "threshold": 9500.0,
+        "window_minutes": 60
+      },
+      "amount": 9200.0,
+      "currency": "USD",
+      "ts": "2026-02-17T22:39:40",
+      "account_id": 4,
+      "counterparty": "Split Pay",
+      "country": "DEU"
+    },
+    {
+      "alert_id": 120,
+      "transaction_id": 191,
+      "rule_id": "HighValueTransaction",
+      "severity": "high",
+      "reason": "Transaction amount 50000.0 >= threshold 10000.0",
+      "evidence": {
+        "amount": 50000.0,
+        "threshold": 10000.0
+      },
+      "amount": 50000.0,
+      "currency": "USD",
+      "ts": "2026-02-14T22:45:02",
+      "account_id": 1,
+      "counterparty": "Big Payee",
+      "country": "USA"
+    },
+    {
+      "alert_id": 121,
+      "transaction_id": 192,
+      "rule_id": "SanctionsKeywordMatch",
+      "severity": "high",
+      "reason": "Counterparty name matches sanctions keyword: 'sanctioned'",
+      "evidence": {
+        "counterparty": "sanctioned entity",
+        "keyword": "sanctioned"
+      },
+      "amount": 1000.0,
+      "currency": "USD",
+      "ts": "2026-02-15T22:45:02",
+      "account_id": 2,
+      "counterparty": "sanctioned entity",
+      "country": "GBR"
+    },
+    {
+      "alert_id": 122,
+      "transaction_id": 193,
+      "rule_id": "RapidVelocity",
+      "severity": "medium",
+      "reason": "19 transactions from same account within 15 minutes",
+      "evidence": {
+        "count": 19,
+        "window_minutes": 15,
+        "account_id": 3
+      },
+      "amount": 500.0,
+      "currency": "EUR",
+      "ts": "2026-02-16T22:45:02",
+      "account_id": 3,
+      "counterparty": "Retail",
+      "country": "FRA"
+    },
+    {
+      "alert_id": 123,
+      "transaction_id": 194,
+      "rule_id": "RapidVelocity",
+      "severity": "medium",
+      "reason": "19 transactions from same account within 15 minutes",
+      "evidence": {
+        "count": 19,
+        "window_minutes": 15,
+        "account_id": 3
+      },
+      "amount": 500.0,
+      "currency": "EUR",
+      "ts": "2026-02-16T22:47:02",
+      "account_id": 3,
+      "counterparty": "Retail",
+      "country": "FRA"
+    },
+    {
+      "alert_id": 124,
+      "transaction_id": 195,
+      "rule_id": "RapidVelocity",
+      "severity": "medium",
+      "reason": "18 transactions from same account within 15 minutes",
+      "evidence": {
+        "count": 18,
+        "window_minutes": 15,
+        "account_id": 3
+      },
+      "amount": 500.0,
+      "currency": "EUR",
+      "ts": "2026-02-16T22:49:02",
+      "account_id": 3,
+      "counterparty": "Retail",
+      "country": "FRA"
+    },
+    {
+      "alert_id": 125,
+      "transaction_id": 196,
+      "rule_id": "RapidVelocity",
+      "severity": "medium",
+      "reason": "16 transactions from same account within 15 minutes",
+      "evidence": {
+        "count": 16,
+        "window_minutes": 15,
+        "account_id": 3
+      },
+      "amount": 500.0,
+      "currency": "EUR",
+      "ts": "2026-02-16T22:51:02",
+      "account_id": 3,
+      "counterparty": "Retail",
+      "country": "FRA"
+    },
+    {
+      "alert_id": 126,
+      "transaction_id": 197,
+      "rule_id": "RapidVelocity",
+      "severity": "medium",
+      "reason": "14 transactions from same account within 15 minutes",
+      "evidence": {
+        "count": 14,
+        "window_minutes": 15,
+        "account_id": 3
+      },
+      "amount": 500.0,
+      "currency": "EUR",
+      "ts": "2026-02-16T22:53:02",
+      "account_id": 3,
+      "counterparty": "Retail",
+      "country": "FRA"
+    },
+    {
+      "alert_id": 127,
+      "transaction_id": 198,
+      "rule_id": "RapidVelocity",
+      "severity": "medium",
+      "reason": "12 transactions from same account within 15 minutes",
+      "evidence": {
+        "count": 12,
+        "window_minutes": 15,
+        "account_id": 3
+      },
+      "amount": 500.0,
+      "currency": "EUR",
+      "ts": "2026-02-16T22:55:02",
+      "account_id": 3,
+      "counterparty": "Retail",
+      "country": "FRA"
+    },
+    {
+      "alert_id": 128,
+      "transaction_id": 199,
+      "rule_id": "StructuringSmurfing",
+      "severity": "high",
+      "reason": "5 transactions just below threshold 9500.0 in 60 min",
+      "evidence": {
+        "count": 5,
+        "threshold": 9500.0,
+        "window_minutes": 60
+      },
+      "amount": 9200.0,
+      "currency": "USD",
+      "ts": "2026-02-17T22:50:02",
+      "account_id": 4,
+      "counterparty": "Split Pay",
+      "country": "DEU"
+    },
+    {
+      "alert_id": 129,
+      "transaction_id": 224,
+      "rule_id": "StructuringSmurfing",
+      "severity": "high",
+      "reason": "4 transactions just below threshold 9500.0 in 60 min",
+      "evidence": {
+        "count": 4,
+        "threshold": 9500.0,
+        "window_minutes": 60
+      },
+      "amount": 1661.42,
+      "currency": "USD",
+      "ts": "2026-02-17T23:00:59",
+      "account_id": 4,
+      "counterparty": "Pay Ltd",
+      "country": "DEU"
+    },
+    {
+      "alert_id": 130,
+      "transaction_id": 231,
+      "rule_id": "HighValueTransaction",
+      "severity": "high",
+      "reason": "Transaction amount 50000.0 >= threshold 10000.0",
+      "evidence": {
+        "amount": 50000.0,
+        "threshold": 10000.0
+      },
+      "amount": 50000.0,
+      "currency": "USD",
+      "ts": "2026-02-17T01:00:59",
+      "account_id": 1,
+      "counterparty": "Big Payee",
+      "country": "USA"
+    },
+    {
+      "alert_id": 131,
+      "transaction_id": 232,
+      "rule_id": "SanctionsKeywordMatch",
+      "severity": "high",
+      "reason": "Counterparty name matches sanctions keyword: 'sanctioned'",
+      "evidence": {
+        "counterparty": "sanctioned entity",
+        "keyword": "sanctioned"
+      },
+      "amount": 1000.0,
+      "currency": "USD",
+      "ts": "2026-02-18T01:00:59",
+      "account_id": 2,
+      "counterparty": "sanctioned entity",
+      "country": "GBR"
+    },
+    {
+      "alert_id": 132,
+      "transaction_id": 237,
+      "rule_id": "RapidVelocity",
+      "severity": "medium",
+      "reason": "5 transactions from same account within 15 minutes",
+      "evidence": {
+        "count": 5,
+        "window_minutes": 15,
+        "account_id": 3
+      },
+      "amount": 500.0,
+      "currency": "EUR",
+      "ts": "2026-02-19T01:08:59",
+      "account_id": 3,
+      "counterparty": "Retail",
+      "country": "FRA"
+    },
+    {
+      "alert_id": 133,
+      "transaction_id": 238,
+      "rule_id": "RapidVelocity",
+      "severity": "medium",
+      "reason": "6 transactions from same account within 15 minutes",
+      "evidence": {
+        "count": 6,
+        "window_minutes": 15,
+        "account_id": 3
+      },
+      "amount": 500.0,
+      "currency": "EUR",
+      "ts": "2026-02-19T01:10:59",
+      "account_id": 3,
+      "counterparty": "Retail",
+      "country": "FRA"
+    }
+  ]
+}

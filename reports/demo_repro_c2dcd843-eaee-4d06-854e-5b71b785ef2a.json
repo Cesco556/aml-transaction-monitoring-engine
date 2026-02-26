@@ -1,0 +1,1033 @@
+{
+  "metadata": {
+    "timestamp": "2026-02-23T01:01:03.184617+00:00",
+    "correlation_id": "c2dcd843-eaee-4d06-854e-5b71b785ef2a"
+  },
+  "config": {
+    "config_hashes": [
+      "01f992780b1c534eb2f6e15f6a426fe957482ddbe174bd14159bb6a4032b4330"
+    ],
+    "rules_versions": [
+      "1.0.0"
+    ],
+    "engine_versions": [
+      "0.1.0"
+    ]
+  },
+  "audit_logs": [
+    {
+      "id": 29,
+      "correlation_id": "c2dcd843-eaee-4d06-854e-5b71b785ef2a",
+      "action": "run_rules",
+      "entity_type": "batch",
+      "entity_id": "all",
+      "ts": "2026-02-23T01:01:01.539645+00:00",
+      "actor": "cli",
+      "details_json": {
+        "processed": 240,
+        "alerts_created": 45,
+        "duration_seconds": 0.189,
+        "config_hash": "01f992780b1c534eb2f6e15f6a426fe957482ddbe174bd14159bb6a4032b4330",
+        "rules_version": "1.0.0",
+        "engine_version": "0.1.0"
+      }
+    }
+  ],
+  "alerts": [
+    {
+      "id": 89,
+      "transaction_id": 1,
+      "rule_id": "NetworkRingIndicator",
+      "severity": "high",
+      "score": 40.0,
+      "reason": "Account shares 4 counterparties with 4 other account(s) (ring pattern)",
+      "evidence_fields": {
+        "linked_accounts": [
+          2,
+          3,
+          4,
+          5
+        ],
+        "shared_counterparties": [
+          "acme ltd",
+          "global ltd",
+          "pay ltd",
+          "trade ltd"
+        ],
+        "overlap_count": 4,
+        "degree": 4,
+        "lookback_days": 30
+      },
+      "config_hash": "01f992780b1c534eb2f6e15f6a426fe957482ddbe174bd14159bb6a4032b4330",
+      "rules_version": "1.0.0",
+      "engine_version": "0.1.0",
+      "correlation_id": "c2dcd843-eaee-4d06-854e-5b71b785ef2a",
+      "status": "open",
+      "disposition": null,
+      "created_at": "2026-02-23T01:01:01.546124+00:00",
+      "updated_at": null
+    },
+    {
+      "id": 90,
+      "transaction_id": 2,
+      "rule_id": "NetworkRingIndicator",
+      "severity": "high",
+      "score": 40.0,
+      "reason": "Account shares 3 counterparties with 4 other account(s) (ring pattern)",
+      "evidence_fields": {
+        "linked_accounts": [
+          1,
+          3,
+          4,
+          5
+        ],
+        "shared_counterparties": [
+          "acme ltd",
+          "global ltd",
+          "pay ltd"
+        ],
+        "overlap_count": 3,
+        "degree": 4,
+        "lookback_days": 30
+      },
+      "config_hash": "01f992780b1c534eb2f6e15f6a426fe957482ddbe174bd14159bb6a4032b4330",
+      "rules_version": "1.0.0",
+      "engine_version": "0.1.0",
+      "correlation_id": "c2dcd843-eaee-4d06-854e-5b71b785ef2a",
+      "status": "open",
+      "disposition": null,
+      "created_at": "2026-02-23T01:01:01.546128+00:00",
+      "updated_at": null
+    },
+    {
+      "id": 91,
+      "transaction_id": 3,
+      "rule_id": "NetworkRingIndicator",
+      "severity": "high",
+      "score": 40.0,
+      "reason": "Account shares 3 counterparties with 4 other account(s) (ring pattern)",
+      "evidence_fields": {
+        "linked_accounts": [
+          1,
+          2,
+          4,
+          5
+        ],
+        "shared_counterparties": [
+          "global ltd",
+          "pay ltd",
+          "trade ltd"
+        ],
+        "overlap_count": 3,
+        "degree": 4,
+        "lookback_days": 30
+      },
+      "config_hash": "01f992780b1c534eb2f6e15f6a426fe957482ddbe174bd14159bb6a4032b4330",
+      "rules_version": "1.0.0",
+      "engine_version": "0.1.0",
+      "correlation_id": "c2dcd843-eaee-4d06-854e-5b71b785ef2a",
+      "status": "open",
+      "disposition": null,
+      "created_at": "2026-02-23T01:01:01.546128+00:00",
+      "updated_at": null
+    },
+    {
+      "id": 92,
+      "transaction_id": 4,
+      "rule_id": "NetworkRingIndicator",
+      "severity": "high",
+      "score": 40.0,
+      "reason": "Account shares 3 counterparties with 4 other account(s) (ring pattern)",
+      "evidence_fields": {
+        "linked_accounts": [
+          1,
+          2,
+          3,
+          5
+        ],
+        "shared_counterparties": [
+          "global ltd",
+          "pay ltd",
+          "trade ltd"
+        ],
+        "overlap_count": 3,
+        "degree": 4,
+        "lookback_days": 30
+      },
+      "config_hash": "01f992780b1c534eb2f6e15f6a426fe957482ddbe174bd14159bb6a4032b4330",
+      "rules_version": "1.0.0",
+      "engine_version": "0.1.0",
+      "correlation_id": "c2dcd843-eaee-4d06-854e-5b71b785ef2a",
+      "status": "open",
+      "disposition": null,
+      "created_at": "2026-02-23T01:01:01.546129+00:00",
+      "updated_at": null
+    },
+    {
+      "id": 93,
+      "transaction_id": 5,
+      "rule_id": "NetworkRingIndicator",
+      "severity": "high",
+      "score": 40.0,
+      "reason": "Account shares 4 counterparties with 4 other account(s) (ring pattern)",
+      "evidence_fields": {
+        "linked_accounts": [
+          1,
+          2,
+          3,
+          4
+        ],
+        "shared_counterparties": [
+          "acme ltd",
+          "global ltd",
+          "pay ltd",
+          "trade ltd"
+        ],
+        "overlap_count": 4,
+        "degree": 4,
+        "lookback_days": 30
+      },
+      "config_hash": "01f992780b1c534eb2f6e15f6a426fe957482ddbe174bd14159bb6a4032b4330",
+      "rules_version": "1.0.0",
+      "engine_version": "0.1.0",
+      "correlation_id": "c2dcd843-eaee-4d06-854e-5b71b785ef2a",
+      "status": "open",
+      "disposition": null,
+      "created_at": "2026-02-23T01:01:01.546129+00:00",
+      "updated_at": null
+    },
+    {
+      "id": 94,
+      "transaction_id": 31,
+      "rule_id": "HighValueTransaction",
+      "severity": "high",
+      "score": 25.0,
+      "reason": "Transaction amount 50000.0 >= threshold 10000.0",
+      "evidence_fields": {
+        "amount": 50000.0,
+        "threshold": 10000.0
+      },
+      "config_hash": "01f992780b1c534eb2f6e15f6a426fe957482ddbe174bd14159bb6a4032b4330",
+      "rules_version": "1.0.0",
+      "engine_version": "0.1.0",
+      "correlation_id": "c2dcd843-eaee-4d06-854e-5b71b785ef2a",
+      "status": "open",
+      "disposition": null,
+      "created_at": "2026-02-23T01:01:01.546129+00:00",
+      "updated_at": null
+    },
+    {
+      "id": 95,
+      "transaction_id": 32,
+      "rule_id": "SanctionsKeywordMatch",
+      "severity": "high",
+      "score": 40.0,
+      "reason": "Counterparty name matches sanctions keyword: 'sanctioned'",
+      "evidence_fields": {
+        "counterparty": "sanctioned entity",
+        "keyword": "sanctioned"
+      },
+      "config_hash": "01f992780b1c534eb2f6e15f6a426fe957482ddbe174bd14159bb6a4032b4330",
+      "rules_version": "1.0.0",
+      "engine_version": "0.1.0",
+      "correlation_id": "c2dcd843-eaee-4d06-854e-5b71b785ef2a",
+      "status": "open",
+      "disposition": null,
+      "created_at": "2026-02-23T01:01:01.546130+00:00",
+      "updated_at": null
+    },
+    {
+      "id": 96,
+      "transaction_id": 37,
+      "rule_id": "RapidVelocity",
+      "severity": "medium",
+      "score": 20.0,
+      "reason": "5 transactions from same account within 15 minutes",
+      "evidence_fields": {
+        "count": 5,
+        "window_minutes": 15,
+        "account_id": 3
+      },
+      "config_hash": "01f992780b1c534eb2f6e15f6a426fe957482ddbe174bd14159bb6a4032b4330",
+      "rules_version": "1.0.0",
+      "engine_version": "0.1.0",
+      "correlation_id": "c2dcd843-eaee-4d06-854e-5b71b785ef2a",
+      "status": "open",
+      "disposition": null,
+      "created_at": "2026-02-23T01:01:01.546131+00:00",
+      "updated_at": null
+    },
+    {
+      "id": 97,
+      "transaction_id": 38,
+      "rule_id": "RapidVelocity",
+      "severity": "medium",
+      "score": 20.0,
+      "reason": "6 transactions from same account within 15 minutes",
+      "evidence_fields": {
+        "count": 6,
+        "window_minutes": 15,
+        "account_id": 3
+      },
+      "config_hash": "01f992780b1c534eb2f6e15f6a426fe957482ddbe174bd14159bb6a4032b4330",
+      "rules_version": "1.0.0",
+      "engine_version": "0.1.0",
+      "correlation_id": "c2dcd843-eaee-4d06-854e-5b71b785ef2a",
+      "status": "open",
+      "disposition": null,
+      "created_at": "2026-02-23T01:01:01.546131+00:00",
+      "updated_at": null
+    },
+    {
+      "id": 98,
+      "transaction_id": 71,
+      "rule_id": "HighValueTransaction",
+      "severity": "high",
+      "score": 25.0,
+      "reason": "Transaction amount 50000.0 >= threshold 10000.0",
+      "evidence_fields": {
+        "amount": 50000.0,
+        "threshold": 10000.0
+      },
+      "config_hash": "01f992780b1c534eb2f6e15f6a426fe957482ddbe174bd14159bb6a4032b4330",
+      "rules_version": "1.0.0",
+      "engine_version": "0.1.0",
+      "correlation_id": "c2dcd843-eaee-4d06-854e-5b71b785ef2a",
+      "status": "open",
+      "disposition": null,
+      "created_at": "2026-02-23T01:01:01.546131+00:00",
+      "updated_at": null
+    },
+    {
+      "id": 99,
+      "transaction_id": 72,
+      "rule_id": "SanctionsKeywordMatch",
+      "severity": "high",
+      "score": 40.0,
+      "reason": "Counterparty name matches sanctions keyword: 'sanctioned'",
+      "evidence_fields": {
+        "counterparty": "sanctioned entity",
+        "keyword": "sanctioned"
+      },
+      "config_hash": "01f992780b1c534eb2f6e15f6a426fe957482ddbe174bd14159bb6a4032b4330",
+      "rules_version": "1.0.0",
+      "engine_version": "0.1.0",
+      "correlation_id": "c2dcd843-eaee-4d06-854e-5b71b785ef2a",
+      "status": "open",
+      "disposition": null,
+      "created_at": "2026-02-23T01:01:01.546132+00:00",
+      "updated_at": null
+    },
+    {
+      "id": 100,
+      "transaction_id": 76,
+      "rule_id": "RapidVelocity",
+      "severity": "medium",
+      "score": 20.0,
+      "reason": "7 transactions from same account within 15 minutes",
+      "evidence_fields": {
+        "count": 7,
+        "window_minutes": 15,
+        "account_id": 3
+      },
+      "config_hash": "01f992780b1c534eb2f6e15f6a426fe957482ddbe174bd14159bb6a4032b4330",
+      "rules_version": "1.0.0",
+      "engine_version": "0.1.0",
+      "correlation_id": "c2dcd843-eaee-4d06-854e-5b71b785ef2a",
+      "status": "open",
+      "disposition": null,
+      "created_at": "2026-02-23T01:01:01.546132+00:00",
+      "updated_at": null
+    },
+    {
+      "id": 101,
+      "transaction_id": 77,
+      "rule_id": "RapidVelocity",
+      "severity": "medium",
+      "score": 20.0,
+      "reason": "10 transactions from same account within 15 minutes",
+      "evidence_fields": {
+        "count": 10,
+        "window_minutes": 15,
+        "account_id": 3
+      },
+      "config_hash": "01f992780b1c534eb2f6e15f6a426fe957482ddbe174bd14159bb6a4032b4330",
+      "rules_version": "1.0.0",
+      "engine_version": "0.1.0",
+      "correlation_id": "c2dcd843-eaee-4d06-854e-5b71b785ef2a",
+      "status": "open",
+      "disposition": null,
+      "created_at": "2026-02-23T01:01:01.546132+00:00",
+      "updated_at": null
+    },
+    {
+      "id": 102,
+      "transaction_id": 78,
+      "rule_id": "RapidVelocity",
+      "severity": "medium",
+      "score": 20.0,
+      "reason": "13 transactions from same account within 15 minutes",
+      "evidence_fields": {
+        "count": 13,
+        "window_minutes": 15,
+        "account_id": 3
+      },
+      "config_hash": "01f992780b1c534eb2f6e15f6a426fe957482ddbe174bd14159bb6a4032b4330",
+      "rules_version": "1.0.0",
+      "engine_version": "0.1.0",
+      "correlation_id": "c2dcd843-eaee-4d06-854e-5b71b785ef2a",
+      "status": "open",
+      "disposition": null,
+      "created_at": "2026-02-23T01:01:01.546133+00:00",
+      "updated_at": null
+    },
+    {
+      "id": 103,
+      "transaction_id": 111,
+      "rule_id": "HighValueTransaction",
+      "severity": "high",
+      "score": 25.0,
+      "reason": "Transaction amount 50000.0 >= threshold 10000.0",
+      "evidence_fields": {
+        "amount": 50000.0,
+        "threshold": 10000.0
+      },
+      "config_hash": "01f992780b1c534eb2f6e15f6a426fe957482ddbe174bd14159bb6a4032b4330",
+      "rules_version": "1.0.0",
+      "engine_version": "0.1.0",
+      "correlation_id": "c2dcd843-eaee-4d06-854e-5b71b785ef2a",
+      "status": "open",
+      "disposition": null,
+      "created_at": "2026-02-23T01:01:01.546133+00:00",
+      "updated_at": null
+    },
+    {
+      "id": 104,
+      "transaction_id": 112,
+      "rule_id": "SanctionsKeywordMatch",
+      "severity": "high",
+      "score": 40.0,
+      "reason": "Counterparty name matches sanctions keyword: 'sanctioned'",
+      "evidence_fields": {
+        "counterparty": "sanctioned entity",
+        "keyword": "sanctioned"
+      },
+      "config_hash": "01f992780b1c534eb2f6e15f6a426fe957482ddbe174bd14159bb6a4032b4330",
+      "rules_version": "1.0.0",
+      "engine_version": "0.1.0",
+      "correlation_id": "c2dcd843-eaee-4d06-854e-5b71b785ef2a",
+      "status": "open",
+      "disposition": null,
+      "created_at": "2026-02-23T01:01:01.546133+00:00",
+      "updated_at": null
+    },
+    {
+      "id": 105,
+      "transaction_id": 114,
+      "rule_id": "RapidVelocity",
+      "severity": "medium",
+      "score": 20.0,
+      "reason": "6 transactions from same account within 15 minutes",
+      "evidence_fields": {
+        "count": 6,
+        "window_minutes": 15,
+        "account_id": 3
+      },
+      "config_hash": "01f992780b1c534eb2f6e15f6a426fe957482ddbe174bd14159bb6a4032b4330",
+      "rules_version": "1.0.0",
+      "engine_version": "0.1.0",
+      "correlation_id": "c2dcd843-eaee-4d06-854e-5b71b785ef2a",
+      "status": "open",
+      "disposition": null,
+      "created_at": "2026-02-23T01:01:01.546133+00:00",
+      "updated_at": null
+    },
+    {
+      "id": 106,
+      "transaction_id": 115,
+      "rule_id": "RapidVelocity",
+      "severity": "medium",
+      "score": 20.0,
+      "reason": "9 transactions from same account within 15 minutes",
+      "evidence_fields": {
+        "count": 9,
+        "window_minutes": 15,
+        "account_id": 3
+      },
+      "config_hash": "01f992780b1c534eb2f6e15f6a426fe957482ddbe174bd14159bb6a4032b4330",
+      "rules_version": "1.0.0",
+      "engine_version": "0.1.0",
+      "correlation_id": "c2dcd843-eaee-4d06-854e-5b71b785ef2a",
+      "status": "open",
+      "disposition": null,
+      "created_at": "2026-02-23T01:01:01.546134+00:00",
+      "updated_at": null
+    },
+    {
+      "id": 107,
+      "transaction_id": 116,
+      "rule_id": "RapidVelocity",
+      "severity": "medium",
+      "score": 20.0,
+      "reason": "12 transactions from same account within 15 minutes",
+      "evidence_fields": {
+        "count": 12,
+        "window_minutes": 15,
+        "account_id": 3
+      },
+      "config_hash": "01f992780b1c534eb2f6e15f6a426fe957482ddbe174bd14159bb6a4032b4330",
+      "rules_version": "1.0.0",
+      "engine_version": "0.1.0",
+      "correlation_id": "c2dcd843-eaee-4d06-854e-5b71b785ef2a",
+      "status": "open",
+      "disposition": null,
+      "created_at": "2026-02-23T01:01:01.546134+00:00",
+      "updated_at": null
+    },
+    {
+      "id": 108,
+      "transaction_id": 117,
+      "rule_id": "RapidVelocity",
+      "severity": "medium",
+      "score": 20.0,
+      "reason": "15 transactions from same account within 15 minutes",
+      "evidence_fields": {
+        "count": 15,
+        "window_minutes": 15,
+        "account_id": 3
+      },
+      "config_hash": "01f992780b1c534eb2f6e15f6a426fe957482ddbe174bd14159bb6a4032b4330",
+      "rules_version": "1.0.0",
+      "engine_version": "0.1.0",
+      "correlation_id": "c2dcd843-eaee-4d06-854e-5b71b785ef2a",
+      "status": "open",
+      "disposition": null,
+      "created_at": "2026-02-23T01:01:01.546134+00:00",
+      "updated_at": null
+    },
+    {
+      "id": 109,
+      "transaction_id": 118,
+      "rule_id": "RapidVelocity",
+      "severity": "medium",
+      "score": 20.0,
+      "reason": "17 transactions from same account within 15 minutes",
+      "evidence_fields": {
+        "count": 17,
+        "window_minutes": 15,
+        "account_id": 3
+      },
+      "config_hash": "01f992780b1c534eb2f6e15f6a426fe957482ddbe174bd14159bb6a4032b4330",
+      "rules_version": "1.0.0",
+      "engine_version": "0.1.0",
+      "correlation_id": "c2dcd843-eaee-4d06-854e-5b71b785ef2a",
+      "status": "open",
+      "disposition": null,
+      "created_at": "2026-02-23T01:01:01.546135+00:00",
+      "updated_at": null
+    },
+    {
+      "id": 110,
+      "transaction_id": 119,
+      "rule_id": "StructuringSmurfing",
+      "severity": "high",
+      "score": 30.0,
+      "reason": "3 transactions just below threshold 9500.0 in 60 min",
+      "evidence_fields": {
+        "count": 3,
+        "threshold": 9500.0,
+        "window_minutes": 60
+      },
+      "config_hash": "01f992780b1c534eb2f6e15f6a426fe957482ddbe174bd14159bb6a4032b4330",
+      "rules_version": "1.0.0",
+      "engine_version": "0.1.0",
+      "correlation_id": "c2dcd843-eaee-4d06-854e-5b71b785ef2a",
+      "status": "open",
+      "disposition": null,
+      "created_at": "2026-02-23T01:01:01.546135+00:00",
+      "updated_at": null
+    },
+    {
+      "id": 111,
+      "transaction_id": 151,
+      "rule_id": "HighValueTransaction",
+      "severity": "high",
+      "score": 25.0,
+      "reason": "Transaction amount 50000.0 >= threshold 10000.0",
+      "evidence_fields": {
+        "amount": 50000.0,
+        "threshold": 10000.0
+      },
+      "config_hash": "01f992780b1c534eb2f6e15f6a426fe957482ddbe174bd14159bb6a4032b4330",
+      "rules_version": "1.0.0",
+      "engine_version": "0.1.0",
+      "correlation_id": "c2dcd843-eaee-4d06-854e-5b71b785ef2a",
+      "status": "open",
+      "disposition": null,
+      "created_at": "2026-02-23T01:01:01.546135+00:00",
+      "updated_at": null
+    },
+    {
+      "id": 112,
+      "transaction_id": 152,
+      "rule_id": "SanctionsKeywordMatch",
+      "severity": "high",
+      "score": 40.0,
+      "reason": "Counterparty name matches sanctions keyword: 'sanctioned'",
+      "evidence_fields": {
+        "counterparty": "sanctioned entity",
+        "keyword": "sanctioned"
+      },
+      "config_hash": "01f992780b1c534eb2f6e15f6a426fe957482ddbe174bd14159bb6a4032b4330",
+      "rules_version": "1.0.0",
+      "engine_version": "0.1.0",
+      "correlation_id": "c2dcd843-eaee-4d06-854e-5b71b785ef2a",
+      "status": "open",
+      "disposition": null,
+      "created_at": "2026-02-23T01:01:01.546136+00:00",
+      "updated_at": null
+    },
+    {
+      "id": 113,
+      "transaction_id": 153,
+      "rule_id": "RapidVelocity",
+      "severity": "medium",
+      "score": 20.0,
+      "reason": "5 transactions from same account within 15 minutes",
+      "evidence_fields": {
+        "count": 5,
+        "window_minutes": 15,
+        "account_id": 3
+      },
+      "config_hash": "01f992780b1c534eb2f6e15f6a426fe957482ddbe174bd14159bb6a4032b4330",
+      "rules_version": "1.0.0",
+      "engine_version": "0.1.0",
+      "correlation_id": "c2dcd843-eaee-4d06-854e-5b71b785ef2a",
+      "status": "open",
+      "disposition": null,
+      "created_at": "2026-02-23T01:01:01.546136+00:00",
+      "updated_at": null
+    },
+    {
+      "id": 114,
+      "transaction_id": 154,
+      "rule_id": "RapidVelocity",
+      "severity": "medium",
+      "score": 20.0,
+      "reason": "8 transactions from same account within 15 minutes",
+      "evidence_fields": {
+        "count": 8,
+        "window_minutes": 15,
+        "account_id": 3
+      },
+      "config_hash": "01f992780b1c534eb2f6e15f6a426fe957482ddbe174bd14159bb6a4032b4330",
+      "rules_version": "1.0.0",
+      "engine_version": "0.1.0",
+      "correlation_id": "c2dcd843-eaee-4d06-854e-5b71b785ef2a",
+      "status": "open",
+      "disposition": null,
+      "created_at": "2026-02-23T01:01:01.546136+00:00",
+      "updated_at": null
+    },
+    {
+      "id": 115,
+      "transaction_id": 155,
+      "rule_id": "RapidVelocity",
+      "severity": "medium",
+      "score": 20.0,
+      "reason": "11 transactions from same account within 15 minutes",
+      "evidence_fields": {
+        "count": 11,
+        "window_minutes": 15,
+        "account_id": 3
+      },
+      "config_hash": "01f992780b1c534eb2f6e15f6a426fe957482ddbe174bd14159bb6a4032b4330",
+      "rules_version": "1.0.0",
+      "engine_version": "0.1.0",
+      "correlation_id": "c2dcd843-eaee-4d06-854e-5b71b785ef2a",
+      "status": "open",
+      "disposition": null,
+      "created_at": "2026-02-23T01:01:01.546137+00:00",
+      "updated_at": null
+    },
+    {
+      "id": 116,
+      "transaction_id": 156,
+      "rule_id": "RapidVelocity",
+      "severity": "medium",
+      "score": 20.0,
+      "reason": "14 transactions from same account within 15 minutes",
+      "evidence_fields": {
+        "count": 14,
+        "window_minutes": 15,
+        "account_id": 3
+      },
+      "config_hash": "01f992780b1c534eb2f6e15f6a426fe957482ddbe174bd14159bb6a4032b4330",
+      "rules_version": "1.0.0",
+      "engine_version": "0.1.0",
+      "correlation_id": "c2dcd843-eaee-4d06-854e-5b71b785ef2a",
+      "status": "open",
+      "disposition": null,
+      "created_at": "2026-02-23T01:01:01.546137+00:00",
+      "updated_at": null
+    },
+    {
+      "id": 117,
+      "transaction_id": 157,
+      "rule_id": "RapidVelocity",
+      "severity": "medium",
+      "score": 20.0,
+      "reason": "16 transactions from same account within 15 minutes",
+      "evidence_fields": {
+        "count": 16,
+        "window_minutes": 15,
+        "account_id": 3
+      },
+      "config_hash": "01f992780b1c534eb2f6e15f6a426fe957482ddbe174bd14159bb6a4032b4330",
+      "rules_version": "1.0.0",
+      "engine_version": "0.1.0",
+      "correlation_id": "c2dcd843-eaee-4d06-854e-5b71b785ef2a",
+      "status": "open",
+      "disposition": null,
+      "created_at": "2026-02-23T01:01:01.546137+00:00",
+      "updated_at": null
+    },
+    {
+      "id": 118,
+      "transaction_id": 158,
+      "rule_id": "RapidVelocity",
+      "severity": "medium",
+      "score": 20.0,
+      "reason": "18 transactions from same account within 15 minutes",
+      "evidence_fields": {
+        "count": 18,
+        "window_minutes": 15,
+        "account_id": 3
+      },
+      "config_hash": "01f992780b1c534eb2f6e15f6a426fe957482ddbe174bd14159bb6a4032b4330",
+      "rules_version": "1.0.0",
+      "engine_version": "0.1.0",
+      "correlation_id": "c2dcd843-eaee-4d06-854e-5b71b785ef2a",
+      "status": "open",
+      "disposition": null,
+      "created_at": "2026-02-23T01:01:01.546137+00:00",
+      "updated_at": null
+    },
+    {
+      "id": 119,
+      "transaction_id": 159,
+      "rule_id": "StructuringSmurfing",
+      "severity": "high",
+      "score": 30.0,
+      "reason": "4 transactions just below threshold 9500.0 in 60 min",
+      "evidence_fields": {
+        "count": 4,
+        "threshold": 9500.0,
+        "window_minutes": 60
+      },
+      "config_hash": "01f992780b1c534eb2f6e15f6a426fe957482ddbe174bd14159bb6a4032b4330",
+      "rules_version": "1.0.0",
+      "engine_version": "0.1.0",
+      "correlation_id": "c2dcd843-eaee-4d06-854e-5b71b785ef2a",
+      "status": "open",
+      "disposition": null,
+      "created_at": "2026-02-23T01:01:01.546138+00:00",
+      "updated_at": null
+    },
+    {
+      "id": 120,
+      "transaction_id": 191,
+      "rule_id": "HighValueTransaction",
+      "severity": "high",
+      "score": 25.0,
+      "reason": "Transaction amount 50000.0 >= threshold 10000.0",
+      "evidence_fields": {
+        "amount": 50000.0,
+        "threshold": 10000.0
+      },
+      "config_hash": "01f992780b1c534eb2f6e15f6a426fe957482ddbe174bd14159bb6a4032b4330",
+      "rules_version": "1.0.0",
+      "engine_version": "0.1.0",
+      "correlation_id": "c2dcd843-eaee-4d06-854e-5b71b785ef2a",
+      "status": "open",
+      "disposition": null,
+      "created_at": "2026-02-23T01:01:01.546138+00:00",
+      "updated_at": null
+    },
+    {
+      "id": 121,
+      "transaction_id": 192,
+      "rule_id": "SanctionsKeywordMatch",
+      "severity": "high",
+      "score": 40.0,
+      "reason": "Counterparty name matches sanctions keyword: 'sanctioned'",
+      "evidence_fields": {
+        "counterparty": "sanctioned entity",
+        "keyword": "sanctioned"
+      },
+      "config_hash": "01f992780b1c534eb2f6e15f6a426fe957482ddbe174bd14159bb6a4032b4330",
+      "rules_version": "1.0.0",
+      "engine_version": "0.1.0",
+      "correlation_id": "c2dcd843-eaee-4d06-854e-5b71b785ef2a",
+      "status": "open",
+      "disposition": null,
+      "created_at": "2026-02-23T01:01:01.546138+00:00",
+      "updated_at": null
+    },
+    {
+      "id": 122,
+      "transaction_id": 193,
+      "rule_id": "RapidVelocity",
+      "severity": "medium",
+      "score": 20.0,
+      "reason": "19 transactions from same account within 15 minutes",
+      "evidence_fields": {
+        "count": 19,
+        "window_minutes": 15,
+        "account_id": 3
+      },
+      "config_hash": "01f992780b1c534eb2f6e15f6a426fe957482ddbe174bd14159bb6a4032b4330",
+      "rules_version": "1.0.0",
+      "engine_version": "0.1.0",
+      "correlation_id": "c2dcd843-eaee-4d06-854e-5b71b785ef2a",
+      "status": "open",
+      "disposition": null,
+      "created_at": "2026-02-23T01:01:01.546139+00:00",
+      "updated_at": null
+    },
+    {
+      "id": 123,
+      "transaction_id": 194,
+      "rule_id": "RapidVelocity",
+      "severity": "medium",
+      "score": 20.0,
+      "reason": "19 transactions from same account within 15 minutes",
+      "evidence_fields": {
+        "count": 19,
+        "window_minutes": 15,
+        "account_id": 3
+      },
+      "config_hash": "01f992780b1c534eb2f6e15f6a426fe957482ddbe174bd14159bb6a4032b4330",
+      "rules_version": "1.0.0",
+      "engine_version": "0.1.0",
+      "correlation_id": "c2dcd843-eaee-4d06-854e-5b71b785ef2a",
+      "status": "open",
+      "disposition": null,
+      "created_at": "2026-02-23T01:01:01.546139+00:00",
+      "updated_at": null
+    },
+    {
+      "id": 124,
+      "transaction_id": 195,
+      "rule_id": "RapidVelocity",
+      "severity": "medium",
+      "score": 20.0,
+      "reason": "18 transactions from same account within 15 minutes",
+      "evidence_fields": {
+        "count": 18,
+        "window_minutes": 15,
+        "account_id": 3
+      },
+      "config_hash": "01f992780b1c534eb2f6e15f6a426fe957482ddbe174bd14159bb6a4032b4330",
+      "rules_version": "1.0.0",
+      "engine_version": "0.1.0",
+      "correlation_id": "c2dcd843-eaee-4d06-854e-5b71b785ef2a",
+      "status": "open",
+      "disposition": null,
+      "created_at": "2026-02-23T01:01:01.546139+00:00",
+      "updated_at": null
+    },
+    {
+      "id": 125,
+      "transaction_id": 196,
+      "rule_id": "RapidVelocity",
+      "severity": "medium",
+      "score": 20.0,
+      "reason": "16 transactions from same account within 15 minutes",
+      "evidence_fields": {
+        "count": 16,
+        "window_minutes": 15,
+        "account_id": 3
+      },
+      "config_hash": "01f992780b1c534eb2f6e15f6a426fe957482ddbe174bd14159bb6a4032b4330",
+      "rules_version": "1.0.0",
+      "engine_version": "0.1.0",
+      "correlation_id": "c2dcd843-eaee-4d06-854e-5b71b785ef2a",
+      "status": "open",
+      "disposition": null,
+      "created_at": "2026-02-23T01:01:01.546140+00:00",
+      "updated_at": null
+    },
+    {
+      "id": 126,
+      "transaction_id": 197,
+      "rule_id": "RapidVelocity",
+      "severity": "medium",
+      "score": 20.0,
+      "reason": "14 transactions from same account within 15 minutes",
+      "evidence_fields": {
+        "count": 14,
+        "window_minutes": 15,
+        "account_id": 3
+      },
+      "config_hash": "01f992780b1c534eb2f6e15f6a426fe957482ddbe174bd14159bb6a4032b4330",
+      "rules_version": "1.0.0",
+      "engine_version": "0.1.0",
+      "correlation_id": "c2dcd843-eaee-4d06-854e-5b71b785ef2a",
+      "status": "open",
+      "disposition": null,
+      "created_at": "2026-02-23T01:01:01.546140+00:00",
+      "updated_at": null
+    },
+    {
+      "id": 127,
+      "transaction_id": 198,
+      "rule_id": "RapidVelocity",
+      "severity": "medium",
+      "score": 20.0,
+      "reason": "12 transactions from same account within 15 minutes",
+      "evidence_fields": {
+        "count": 12,
+        "window_minutes": 15,
+        "account_id": 3
+      },
+      "config_hash": "01f992780b1c534eb2f6e15f6a426fe957482ddbe174bd14159bb6a4032b4330",
+      "rules_version": "1.0.0",
+      "engine_version": "0.1.0",
+      "correlation_id": "c2dcd843-eaee-4d06-854e-5b71b785ef2a",
+      "status": "open",
+      "disposition": null,
+      "created_at": "2026-02-23T01:01:01.546140+00:00",
+      "updated_at": null
+    },
+    {
+      "id": 128,
+      "transaction_id": 199,
+      "rule_id": "StructuringSmurfing",
+      "severity": "high",
+      "score": 30.0,
+      "reason": "5 transactions just below threshold 9500.0 in 60 min",
+      "evidence_fields": {
+        "count": 5,
+        "threshold": 9500.0,
+        "window_minutes": 60
+      },
+      "config_hash": "01f992780b1c534eb2f6e15f6a426fe957482ddbe174bd14159bb6a4032b4330",
+      "rules_version": "1.0.0",
+      "engine_version": "0.1.0",
+      "correlation_id": "c2dcd843-eaee-4d06-854e-5b71b785ef2a",
+      "status": "open",
+      "disposition": null,
+      "created_at": "2026-02-23T01:01:01.546140+00:00",
+      "updated_at": null
+    },
+    {
+      "id": 129,
+      "transaction_id": 224,
+      "rule_id": "StructuringSmurfing",
+      "severity": "high",
+      "score": 30.0,
+      "reason": "4 transactions just below threshold 9500.0 in 60 min",
+      "evidence_fields": {
+        "count": 4,
+        "threshold": 9500.0,
+        "window_minutes": 60
+      },
+      "config_hash": "01f992780b1c534eb2f6e15f6a426fe957482ddbe174bd14159bb6a4032b4330",
+      "rules_version": "1.0.0",
+      "engine_version": "0.1.0",
+      "correlation_id": "c2dcd843-eaee-4d06-854e-5b71b785ef2a",
+      "status": "open",
+      "disposition": null,
+      "created_at": "2026-02-23T01:01:01.546141+00:00",
+      "updated_at": null
+    },
+    {
+      "id": 130,
+      "transaction_id": 231,
+      "rule_id": "HighValueTransaction",
+      "severity": "high",
+      "score": 25.0,
+      "reason": "Transaction amount 50000.0 >= threshold 10000.0",
+      "evidence_fields": {
+        "amount": 50000.0,
+        "threshold": 10000.0
+      },
+      "config_hash": "01f992780b1c534eb2f6e15f6a426fe957482ddbe174bd14159bb6a4032b4330",
+      "rules_version": "1.0.0",
+      "engine_version": "0.1.0",
+      "correlation_id": "c2dcd843-eaee-4d06-854e-5b71b785ef2a",
+      "status": "open",
+      "disposition": null,
+      "created_at": "2026-02-23T01:01:01.546141+00:00",
+      "updated_at": null
+    },
+    {
+      "id": 131,
+      "transaction_id": 232,
+      "rule_id": "SanctionsKeywordMatch",
+      "severity": "high",
+      "score": 40.0,
+      "reason": "Counterparty name matches sanctions keyword: 'sanctioned'",
+      "evidence_fields": {
+        "counterparty": "sanctioned entity",
+        "keyword": "sanctioned"
+      },
+      "config_hash": "01f992780b1c534eb2f6e15f6a426fe957482ddbe174bd14159bb6a4032b4330",
+      "rules_version": "1.0.0",
+      "engine_version": "0.1.0",
+      "correlation_id": "c2dcd843-eaee-4d06-854e-5b71b785ef2a",
+      "status": "open",
+      "disposition": null,
+      "created_at": "2026-02-23T01:01:01.546141+00:00",
+      "updated_at": null
+    },
+    {
+      "id": 132,
+      "transaction_id": 237,
+      "rule_id": "RapidVelocity",
+      "severity": "medium",
+      "score": 20.0,
+      "reason": "5 transactions from same account within 15 minutes",
+      "evidence_fields": {
+        "count": 5,
+        "window_minutes": 15,
+        "account_id": 3
+      },
+      "config_hash": "01f992780b1c534eb2f6e15f6a426fe957482ddbe174bd14159bb6a4032b4330",
+      "rules_version": "1.0.0",
+      "engine_version": "0.1.0",
+      "correlation_id": "c2dcd843-eaee-4d06-854e-5b71b785ef2a",
+      "status": "closed",
+      "disposition": "false_positive",
+      "created_at": "2026-02-23T01:01:01.546142+00:00",
+      "updated_at": "2026-02-23T01:01:02.539663+00:00"
+    },
+    {
+      "id": 133,
+      "transaction_id": 238,
+      "rule_id": "RapidVelocity",
+      "severity": "medium",
+      "score": 20.0,
+      "reason": "6 transactions from same account within 15 minutes",
+      "evidence_fields": {
+        "count": 6,
+        "window_minutes": 15,
+        "account_id": 3
+      },
+      "config_hash": "01f992780b1c534eb2f6e15f6a426fe957482ddbe174bd14159bb6a4032b4330",
+      "rules_version": "1.0.0",
+      "engine_version": "0.1.0",
+      "correlation_id": "c2dcd843-eaee-4d06-854e-5b71b785ef2a",
+      "status": "open",
+      "disposition": null,
+      "created_at": "2026-02-23T01:01:01.546142+00:00",
+      "updated_at": null
+    }
+  ],
+  "cases": [],
+  "network": {
+    "edge_count": 0,
+    "edges": []
+  }
+}

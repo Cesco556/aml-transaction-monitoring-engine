@@ -1,0 +1,8 @@
+rule_id,scenario_id,severity,params_snapshot,owner,last_tested,version
+high_value,SCN-HV-001,High,"{""threshold_amount"":1000}",Francesco,2025-02-23,"rule_hash:<fill>"
+sanctions_keyword,SCN-SAN-001,Critical,"{""keywords_source"":""config.sanctions_keywords""}",Francesco,2025-02-23,"rule_hash:<fill>"
+high_risk_country,SCN-GEO-001,High,"{""countries_source"":""config.high_risk_country""}",Francesco,2025-02-23,"rule_hash:<fill>"
+network_ring,SCN-NET-001,High,"{""min_ring_size"":3}",Francesco,2025-02-23,"rule_hash:<fill>"
+rapid_velocity,SCN-VEL-001,High,"{""window_minutes"":15,""min_transactions"":5}",Francesco,2025-02-23,"rule_hash:<fill>"
+structuring_smurfing,SCN-STR-001,High,"{""threshold_amount"":9500,""window_minutes"":60}",Francesco,2025-02-23,"rule_hash:<fill>"
+geo_mismatch,SCN-GEO-002,Medium,"{""window_minutes"":60,""max_countries_in_window"":2}",Francesco,2025-02-23,"rule_hash:<fill>"

@@ -1,0 +1,10 @@
+# Generated from pyproject.toml for pip users. Prefer: poetry install
+fastapi>=0.115.0
+uvicorn[standard]>=0.32.0
+sqlalchemy>=2.0.36
+pydantic>=2.9.0
+pydantic-settings>=2.6.0
+typer[all]>=0.12.0
+pyyaml>=6.0.2
+pandas>=2.2.0
+aiosqlite>=0.20.0
