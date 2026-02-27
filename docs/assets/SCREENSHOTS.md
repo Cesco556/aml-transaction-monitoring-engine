@@ -6,7 +6,7 @@ The README shows three images: **Overview**, **Alerts**, and **Network**. Use th
 
 ## Step-by-step with the real dataset (~100k rows)
 
-Use **`data/real/transactions.csv`** (100k+ rows). The ingest pipeline auto-maps its columns (e.g. `account_id`→`iban_or_acct`, `timestamp`→`ts`, `merchant_name`→`merchant`).
+Use **`data/real/transactions.csv`** (100k+ rows). This file is **not in the repo**—place your own CSV in `data/real/` or use `data/real/generate_transactions.py` if available. The ingest pipeline auto-maps its columns (e.g. `account_id`→`iban_or_acct`, `timestamp`→`ts`, `merchant_name`→`merchant`).
 
 ### Step 1 – Go to project root
 

@@ -29,11 +29,18 @@ data/aml.db
 data/aml_dev.db
 reports/
 reproduce_*.json
-# Optional: uncomment to exclude large/regenerable data (script stays: data/real/generate_transactions.py)
-# data/real/*.csv
-# data/real/*.schema.json
-# data/synthetic/*.csv
-# data/synthetic/*.jsonl
+# Data: generated or local-only (scripts: generate_synthetic_data.py, data/real/generate_transactions.py)
+data/real/*.csv
+data/real/*.schema.json
+data/synthetic/*.csv
+data/synthetic/*.jsonl
+# Env / credentials (use .env.example as template; never commit secrets)
+.env
+.env.docker
+.env.local
+*.log
+*.tmp
+*.bak
 
 # Internal / planning docs (kept locally, not on GitHub)
 docs/BENCHMARK_FINDINGS_AND_ACTIONS.md

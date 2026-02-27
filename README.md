@@ -4,9 +4,9 @@ Production-grade AML (Anti-Money Laundering) transaction monitoring MVP for a fi
 
 ## Dashboard (Screenshots)
 
-![Overview](docs/assets/overview.png?v=2)
-![Alerts](docs/assets/alerts.png?v=2)
-![Network](docs/assets/network.png?v=2)
+![Overview](docs/assets/overview.png)
+![Alerts](docs/assets/alerts.png)
+![Network](docs/assets/network.png)
 
 ## Portfolio Overview
 
