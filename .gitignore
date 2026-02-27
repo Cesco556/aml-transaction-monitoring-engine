@@ -31,3 +31,18 @@ reports/
 # data/real/*.schema.json
 # data/synthetic/*.csv
 # data/synthetic/*.jsonl
+
+# Internal / planning docs (kept locally, not on GitHub)
+docs/BENCHMARK_FINDINGS_AND_ACTIONS.md
+docs/BENCHMARK_TOP_PROJECTS.md
+docs/CI_RUN_LOG.md
+docs/DOCS_CONSISTENCY_AUDIT.md
+docs/GITHUB_POSITIONING.md
+docs/IMPLEMENTATION_CHANGELOG_PLAN.md
+docs/IMPLEMENTATION_DELIVERABLE.md
+docs/MAKE_CI_OUTPUT_AFTER_RULES_VERSION.md
+docs/MAKE_CI_PROOF.md
+docs/PRODUCTION_READINESS_GAP_ANALYSIS.md
+docs/THREAD_B_AUDIT_REPORT.md
+docs/VETERAN_CRITIQUE_AND_2026_ROADMAP.md
+docs/archive/
