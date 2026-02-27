@@ -4,9 +4,11 @@ Production-grade AML (Anti-Money Laundering) transaction monitoring MVP for a fi
 
 ## Dashboard (Screenshots)
 
+Overview (metrics and alerts by severity), Alerts table, and Cases table. See [docs/assets/SCREENSHOTS.md](docs/assets/SCREENSHOTS.md) to capture your own.
+
 ![Overview](docs/assets/overview.png)
 ![Alerts](docs/assets/alerts.png)
-![Network](docs/assets/network.png)
+![Cases](docs/assets/network.png)
 
 ## Portfolio Overview
 
@@ -25,15 +27,17 @@ Production-grade AML (Anti-Money Laundering) transaction monitoring MVP for a fi
 
 ## Quick Start
 
+Data files (`data/synthetic/`, `data/real/`) are not in the repo; generate or add them first (see below).
+
 ```bash
-# Clone and enter project
-cd "AML Transaction Monitoring Engine Project"
+# Clone and enter project root (e.g. cd aml-transaction-monitoring-engine)
+cd "<your-clone-directory>"
 
 # Install dependencies (Poetry). If you use uv: uv sync
 poetry lock
 poetry install
 
-# Generate synthetic data
+# Generate synthetic data (creates data/synthetic/transactions.csv and .jsonl)
 poetry run python scripts/generate_synthetic_data.py
 
 # Ingest into SQLite
@@ -54,8 +58,9 @@ make serve
 
 ```bash
 # From project root (macOS/Linux)
-cd "AML Transaction Monitoring Engine Project"
+cd "<your-clone-directory>"
 poetry install
+# Generate synthetic data first (not in repo)
 poetry run python scripts/generate_synthetic_data.py
 poetry run aml ingest data/synthetic/transactions.csv
 poetry run aml run-rules
@@ -85,7 +90,7 @@ The script ensures Poetry is available, runs `poetry install`, then `poetry run 
 
 So that **your** terminal in this workspace is ready for `make ci` and `poetry`:
 
-1. **New terminals open in the project root** — Workspace setting is in `.vscode/settings.json` (`terminal.integrated.cwd`).
+1. **New terminals open in the project root** — In VS Code/Cursor, set `terminal.integrated.cwd` to `${workspaceFolder}` (optional).
 2. **One-time per terminal (or per session):**  
    ```bash
    chmod +x scripts/setup_terminal.sh   # once
@@ -94,7 +99,7 @@ So that **your** terminal in this workspace is ready for `make ci` and `poetry`:
    ```  
    Or without activating the shell: `poetry run make ci`.
 
-The AI agent in Cursor runs commands in a **separate** environment and cannot use your terminal. To have the agent work with real CI results, run `make ci` in your terminal and paste the output into the chat (or into `docs/MAKE_CI_OUTPUT_AFTER_RULES_VERSION.md`).
+The AI agent in Cursor runs commands in a **separate** environment and cannot use your terminal. To have the agent work with real CI results, run `make ci` in your terminal and paste the output into the chat.
 
 ## Architecture (ASCII)
 
@@ -125,7 +130,8 @@ The AI agent in Cursor runs commands in a **separate** environment and cannot us
     |   GeoMismatch, |
     |   Structuring, |
     |   Sanctions,   |
-    |   HighRiskCtry)|           +----------------+
+    |   HighRiskCtry,|
+    |   NetworkRing) |           +----------------+
     +--------+-------+           |  FastAPI        |
              |                  |  /score,        |
              v                  |  /alerts,       |
@@ -164,7 +170,7 @@ Options (common): `-c` / `--config` to pass a YAML config path.
 
 ## Configuration
 
-- **Default**: `config/default.yaml` (SQLite).
+- **Default**: `config/default.yaml` (SQLite). For local CLI runs (ingest, run-rules), set `AML_ENV=dev` so high-risk country placeholders are replaced with real codes; see [RUNBOOK](RUNBOOK.md).
 - **Override**: `config/dev.yaml` (merged when `AML_ENV=dev`) or env vars `AML_*` (e.g. `AML_DATABASE_URL`, `AML_LOG_LEVEL`).
 - **PostgreSQL** (faster run-rules): Set `AML_DATABASE_URL=postgresql://user:pass@host:5432/db`, run `alembic upgrade head`, then use the CLI as usual. See [docs/POSTGRES.md](docs/POSTGRES.md) and `docker-compose up -d` for local Postgres.
 - **Tuned (train)**: After `aml train`, `config/tuned.yaml` is written and **merged automatically** on the next run (run-rules, ingest, etc.). The engine “trains itself” from ingested data: high-value and structuring thresholds from amount percentiles, rapid-velocity from per-account transaction counts in a 15‑minute window. Delete `config/tuned.yaml` to revert to default/dev only.
@@ -180,6 +186,7 @@ Options (common): `-c` / `--config` to pass a YAML config path.
 | **StructuringSmurfing** | Many txns just below threshold in window | same |
 | **SanctionsKeywordMatch** | Counterparty name contains keyword from list | same |
 | **HighRiskCountry** | Transaction country in config high-risk list | same |
+| **NetworkRingIndicator** | Account linked to others via shared counterparties (ring) | same |
 
 ## Risk Scoring
 
@@ -210,7 +217,8 @@ To reproduce a run (e.g. for audits or “why was this flagged?”):
 ├── config/
 │   ├── default.yaml
 │   └── dev.yaml
-├── data/                 # Created at runtime (DB, synthetic, reports)
+├── data/                 # Runtime: DB files (aml.db, aml_dev.db); data/synthetic/ and data/real/ created by scripts or you (not in repo)
+├── reports/              # Generated SAR JSON/CSV (not in repo)
 ├── scripts/
 │   └── generate_synthetic_data.py
 ├── src/
