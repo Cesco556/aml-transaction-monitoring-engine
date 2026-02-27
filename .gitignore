@@ -20,3 +20,14 @@ build/
 .coverage
 htmlcov/
 .DS_Store
+
+# Runtime / generated (do not commit)
+data/*.db
+data/aml.db
+data/aml_dev.db
+reports/
+# Optional: uncomment to exclude large/regenerable data (script stays: data/real/generate_transactions.py)
+# data/real/*.csv
+# data/real/*.schema.json
+# data/synthetic/*.csv
+# data/synthetic/*.jsonl
