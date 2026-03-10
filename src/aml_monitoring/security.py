@@ -56,7 +56,12 @@ class RateLimitMiddleware(BaseHTTPMiddleware):
 
     async def dispatch(self, request: Request, call_next: Any) -> Response:
         # Determine client IP
-        client_ip = request.client.host if request.client else "unknown"
+        # Support reverse proxy (X-Forwarded-For) before falling back to direct IP
+        forwarded = request.headers.get("x-forwarded-for")
+        if forwarded:
+            client_ip = forwarded.split(",")[0].strip()
+        else:
+            client_ip = request.client.host if request.client else "unknown"
 
         # Pick the right limit
         if request.method in _WRITE_METHODS:
@@ -123,11 +128,14 @@ class RequestSizeLimitMiddleware(BaseHTTPMiddleware):
 
     async def dispatch(self, request: Request, call_next: Any) -> Response:
         content_length = request.headers.get("content-length")
-        if content_length and int(content_length) > self.max_bytes:
-            return JSONResponse(
-                status_code=413,
-                content={"detail": "Request body too large"},
-            )
+        try:
+            if content_length and int(content_length) > self.max_bytes:
+                return JSONResponse(
+                    status_code=413,
+                    content={"detail": "Request body too large"},
+                )
+        except (ValueError, TypeError):
+            pass  # Malformed content-length; let downstream handle it
         return await call_next(request)
 
 
