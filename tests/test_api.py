@@ -14,6 +14,7 @@ from aml_monitoring.config import get_config
 from aml_monitoring.db import init_db, session_scope
 from aml_monitoring.models import Account, Alert, AuditLog, Customer, Transaction
 from aml_monitoring.run_rules import run_rules
+from aml_monitoring.security import reset_rate_limits
 
 # For mutation tests: fixture sets AML_API_KEYS=admin:test_admin_key; use this header.
 AUTH_HEADERS = {"X-API-Key": "test_admin_key"}
@@ -22,6 +23,7 @@ AUTH_HEADERS = {"X-API-Key": "test_admin_key"}
 @pytest.fixture
 def api_client(tmp_path: Path):
     """Client with DB initialized; use file DB so app lifespan shares same DB as fixture."""
+    reset_rate_limits()
     os.environ["AML_API_KEYS"] = "admin:test_admin_key"
     db_file = tmp_path / "api_test.db"
     config_file = tmp_path / "api_config.yaml"

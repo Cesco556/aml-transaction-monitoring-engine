@@ -55,12 +55,18 @@ def require_api_key(request: Request) -> str:
     if not api_key:
         from fastapi import HTTPException
 
-        raise HTTPException(status_code=401, detail="Missing X-API-Key")
+        raise HTTPException(
+            status_code=401,
+            detail="Authentication required. Provide a valid API key via the X-API-Key header.",
+        )
     actor = key_to_actor.get(api_key)
     if not actor:
         from fastapi import HTTPException
 
-        raise HTTPException(status_code=401, detail="Invalid API key")
+        raise HTTPException(
+            status_code=401,
+            detail="Invalid or expired API key. Check your X-API-Key header value.",
+        )
     scope = key_to_scope.get(api_key, _DEFAULT_SCOPE)
     _current_scope.set(scope)
     set_actor(actor)
@@ -73,7 +79,10 @@ def require_write_scope() -> None:
     if scope == "read_only":
         from fastapi import HTTPException
 
-        raise HTTPException(status_code=403, detail="Insufficient scope: write required")
+        raise HTTPException(
+            status_code=403,
+            detail="Insufficient scope: this endpoint requires read_write permission.",
+        )
 
 
 def require_api_key_write(request: Request) -> str:

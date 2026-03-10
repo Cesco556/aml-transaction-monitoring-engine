@@ -71,9 +71,43 @@ reporting:
   include_evidence: true
 
 api:
-  host: 0.0.0.0
+  host: 127.0.0.1
   port: 8000
   workers: 1
+
+security:
+  rate_limiting:
+    enabled: true
+    read_limit: "100/minute"
+    write_limit: "20/minute"
+  cors:
+    enabled: true
+    allowed_origins:
+      - "http://localhost"
+      - "http://localhost:8000"
+      - "http://localhost:8501"
+      - "http://127.0.0.1"
+      - "http://127.0.0.1:8000"
+      - "http://127.0.0.1:8501"
+    allow_methods:
+      - "GET"
+      - "POST"
+      - "PATCH"
+      - "OPTIONS"
+    allow_headers:
+      - "X-API-Key"
+      - "X-Correlation-ID"
+      - "Content-Type"
+    allow_credentials: false
+  headers:
+    x_content_type_options: "nosniff"
+    x_frame_options: "DENY"
+    x_xss_protection: "1; mode=block"
+    content_security_policy: "default-src 'none'; frame-ancestors 'none'"
+    referrer_policy: "strict-origin-when-cross-origin"
+    cache_control: "no-store"
+  request:
+    max_body_size_bytes: 1048576  # 1 MB
 
 run_rules:
   chunk_size: 0  # 0 = no chunking (load all); set e.g. 5000 for bounded memory + checkpoint
