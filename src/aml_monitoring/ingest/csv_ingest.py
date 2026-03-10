@@ -25,6 +25,55 @@ from aml_monitoring.models import Account, AuditLog, Customer, Transaction
 log = logging.getLogger(__name__)
 
 
+def _process_batch(
+    batch: list[tuple[dict, str | None]],
+) -> int:
+    """Process a batch of canonical rows: deduplicate + insert. Returns rows inserted."""
+    inserted = 0
+    with session_scope() as session:
+        seen: set[str] = set()
+        for b, ext_id in batch:
+            account_id = _ensure_customer_and_account(
+                session,
+                b["customer_name"],
+                b["country"],
+                b["iban_or_acct"],
+                b["base_risk"],
+            )
+            external_id = external_id_for_row(
+                ext_id,
+                account_id,
+                b["ts"],
+                b["amount"],
+                b["currency"],
+                b["counterparty"],
+                b["direction"],
+            )
+            if (
+                external_id in seen
+                or session.execute(
+                    select(Transaction.id).where(Transaction.external_id == external_id)
+                ).first()
+            ):
+                continue
+            seen.add(external_id)
+            t = Transaction(
+                external_id=external_id,
+                account_id=account_id,
+                ts=b["ts"],
+                amount=b["amount"],
+                currency=b["currency"],
+                merchant=b["merchant"],
+                counterparty=b["counterparty"],
+                country=b["country_txn"],
+                channel=b["channel"],
+                direction=b["direction"],
+            )
+            session.add(t)
+            inserted += 1
+    return inserted
+
+
 def _ensure_customer_and_account(
     session, customer_name: str, country: str, iban_or_acct: str, base_risk: float
 ) -> int:
@@ -111,91 +160,11 @@ def ingest_csv(
                     reject_reasons.append(f"parse_error:{type(e).__name__}:{msg}")
                 continue
             if len(batch) >= batch_size:
-                with session_scope() as session:
-                    seen_in_batch: set[str] = set()
-                    for b, ext_id in batch:
-                        account_id = _ensure_customer_and_account(
-                            session,
-                            b["customer_name"],
-                            b["country"],
-                            b["iban_or_acct"],
-                            b["base_risk"],
-                        )
-                        external_id = external_id_for_row(
-                            ext_id,
-                            account_id,
-                            b["ts"],
-                            b["amount"],
-                            b["currency"],
-                            b["counterparty"],
-                            b["direction"],
-                        )
-                        if (
-                            external_id in seen_in_batch
-                            or session.execute(
-                                select(Transaction.id).where(Transaction.external_id == external_id)
-                            ).first()
-                        ):
-                            continue
-                        seen_in_batch.add(external_id)
-                        t = Transaction(
-                            external_id=external_id,
-                            account_id=account_id,
-                            ts=b["ts"],
-                            amount=b["amount"],
-                            currency=b["currency"],
-                            merchant=b["merchant"],
-                            counterparty=b["counterparty"],
-                            country=b["country_txn"],
-                            channel=b["channel"],
-                            direction=b["direction"],
-                        )
-                        session.add(t)
-                        rows_inserted += 1
+                rows_inserted += _process_batch(batch)
                 batch = []
 
     if batch:
-        with session_scope() as session:
-            seen_residual: set[str] = set()
-            for b, ext_id in batch:
-                account_id = _ensure_customer_and_account(
-                    session,
-                    b["customer_name"],
-                    b["country"],
-                    b["iban_or_acct"],
-                    b["base_risk"],
-                )
-                external_id = external_id_for_row(
-                    ext_id,
-                    account_id,
-                    b["ts"],
-                    b["amount"],
-                    b["currency"],
-                    b["counterparty"],
-                    b["direction"],
-                )
-                if (
-                    external_id in seen_residual
-                    or session.execute(
-                        select(Transaction.id).where(Transaction.external_id == external_id)
-                    ).first()
-                ):
-                    continue
-                seen_residual.add(external_id)
-                t = Transaction(
-                    external_id=external_id,
-                    account_id=account_id,
-                    ts=b["ts"],
-                    amount=b["amount"],
-                    currency=b["currency"],
-                    merchant=b["merchant"],
-                    counterparty=b["counterparty"],
-                    country=b["country_txn"],
-                    channel=b["channel"],
-                    direction=b["direction"],
-                )
-                session.add(t)
-                rows_inserted += 1
+        rows_inserted += _process_batch(batch)
 
     duration = time.perf_counter() - start
     details: dict = {

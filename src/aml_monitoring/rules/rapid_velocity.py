@@ -17,6 +17,8 @@ class RapidVelocityRule(BaseRule):
     def __init__(self, config: dict) -> None:
         self.min_transactions = int(config.get("min_transactions", 5))
         self.window_minutes = int(config.get("window_minutes", 15))
+        self.severity = str(config.get("severity", "medium"))
+        self.score_delta = float(config.get("score_delta", 20.0))
 
     def evaluate(self, ctx: RuleContext) -> list[RuleResult]:
         window_start = ctx.ts - timedelta(minutes=self.window_minutes)
@@ -31,14 +33,14 @@ class RapidVelocityRule(BaseRule):
             return [
                 RuleResult(
                     rule_id=self.rule_id,
-                    severity="medium",
+                    severity=self.severity,
                     reason=f"{count} transactions from same account within {self.window_minutes} minutes",
                     evidence_fields={
                         "count": count,
                         "window_minutes": self.window_minutes,
                         "account_id": ctx.account_id,
                     },
-                    score_delta=20.0,
+                    score_delta=self.score_delta,
                 )
             ]
         return []

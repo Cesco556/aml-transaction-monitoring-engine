@@ -13,6 +13,8 @@ class HighRiskCountryRule(BaseRule):
         self.countries = {c.strip().upper() for c in config.get("countries", []) if c}
         self.list_version = str(config.get("list_version", "unknown"))
         self.effective_date = str(config.get("effective_date", ""))
+        self.severity = str(config.get("severity", "high"))
+        self.score_delta = float(config.get("score_delta", 25.0))
 
     def evaluate(self, ctx: RuleContext) -> list[RuleResult]:
         if not ctx.country:
@@ -27,10 +29,10 @@ class HighRiskCountryRule(BaseRule):
             return [
                 RuleResult(
                     rule_id=self.rule_id,
-                    severity="high",
+                    severity=self.severity,
                     reason=f"Transaction involves high-risk country: {ctx.country}",
                     evidence_fields=evidence,
-                    score_delta=35.0,
+                    score_delta=self.score_delta,
                 )
             ]
         return []

@@ -18,6 +18,8 @@ class StructuringSmurfingRule(BaseRule):
         self.threshold = float(config.get("threshold_amount", 9500))
         self.min_transactions = int(config.get("min_transactions", 3))
         self.window_minutes = int(config.get("window_minutes", 60))
+        self.severity = str(config.get("severity", "high"))
+        self.score_delta = float(config.get("score_delta", 30.0))
 
     def evaluate(self, ctx: RuleContext) -> list[RuleResult]:
         window_start = ctx.ts - timedelta(minutes=self.window_minutes)
@@ -36,14 +38,14 @@ class StructuringSmurfingRule(BaseRule):
             return [
                 RuleResult(
                     rule_id=self.rule_id,
-                    severity="high",
+                    severity=self.severity,
                     reason=f"{count} transactions just below threshold {self.threshold} in {self.window_minutes} min",
                     evidence_fields={
                         "count": count,
                         "threshold": self.threshold,
                         "window_minutes": self.window_minutes,
                     },
-                    score_delta=30.0,
+                    score_delta=self.score_delta,
                 )
             ]
         return []

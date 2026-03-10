@@ -17,6 +17,8 @@ class GeoMismatchRule(BaseRule):
     def __init__(self, config: dict) -> None:
         self.window_minutes = int(config.get("window_minutes", 60))
         self.max_countries = int(config.get("max_countries_in_window", 2))
+        self.severity = str(config.get("severity", "medium"))
+        self.score_delta = float(config.get("score_delta", 15.0))
 
     def evaluate(self, ctx: RuleContext) -> list[RuleResult]:
         if not ctx.country:
@@ -37,13 +39,13 @@ class GeoMismatchRule(BaseRule):
             return [
                 RuleResult(
                     rule_id=self.rule_id,
-                    severity="medium",
+                    severity=self.severity,
                     reason=f"Unusual country spread: {len(countries)} countries in {self.window_minutes} min",
                     evidence_fields={
                         "countries": list(countries),
                         "window_minutes": self.window_minutes,
                     },
-                    score_delta=15.0,
+                    score_delta=self.score_delta,
                 )
             ]
         return []
