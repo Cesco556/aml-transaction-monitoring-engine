@@ -8,6 +8,7 @@ from datetime import UTC, datetime
 from typing import Any
 
 from fastapi import Depends, FastAPI, HTTPException, Query
+from fastapi.openapi.utils import get_openapi
 from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.requests import Request
 
@@ -32,6 +33,7 @@ from aml_monitoring.schemas import (
     TransactionResponse,
 )
 from aml_monitoring.scoring import compute_transaction_risk
+from aml_monitoring.security import setup_security
 
 
 def _build_context_for_score(t: TransactionCreate, session: Any) -> RuleContext | None:
@@ -69,7 +71,13 @@ async def lifespan(app: FastAPI):
     # no cleanup needed for SQLite
 
 
-app = FastAPI(title="AML Monitoring API", version="0.1.0", lifespan=lifespan)
+app = FastAPI(
+    title="AML Monitoring API",
+    version="0.1.0",
+    lifespan=lifespan,
+    docs_url="/docs",
+    redoc_url="/redoc",
+)
 
 
 class AuditContextMiddleware(BaseHTTPMiddleware):
@@ -87,7 +95,57 @@ class AuditContextMiddleware(BaseHTTPMiddleware):
 
 app.add_middleware(AuditContextMiddleware)
 
+# Security middleware (rate limiting, CORS, headers, request size)
+setup_security(app)
+
 app.include_router(cases_router)
+
+
+# ---------------------------------------------------------------------------
+# Custom OpenAPI schema with security definitions
+# ---------------------------------------------------------------------------
+
+def custom_openapi() -> dict[str, Any]:
+    """Generate OpenAPI schema with API key security scheme."""
+    if app.openapi_schema:
+        return app.openapi_schema
+    openapi_schema = get_openapi(
+        title=app.title,
+        version=app.version,
+        description="AML Transaction Monitoring API. "
+        "Write endpoints require X-API-Key authentication.",
+        routes=app.routes,
+    )
+    openapi_schema["components"]["securitySchemes"] = {
+        "ApiKeyAuth": {
+            "type": "apiKey",
+            "in": "header",
+            "name": "X-API-Key",
+            "description": "API key for authentication. "
+            "Write operations require read_write scope.",
+        }
+    }
+    # Apply security globally (individual endpoints can override)
+    openapi_schema["security"] = [{"ApiKeyAuth": []}]
+    app.openapi_schema = openapi_schema
+    return app.openapi_schema
+
+
+app.openapi = custom_openapi  # type: ignore[method-assign]
+
+
+@app.exception_handler(Exception)
+async def _unhandled_exception_handler(request: Request, exc: Exception) -> Any:
+    """Catch unhandled exceptions; return generic 500 without leaking internals."""
+    from fastapi.responses import JSONResponse
+
+    # Re-raise HTTPException so FastAPI handles it normally
+    if isinstance(exc, HTTPException):
+        raise exc
+    return JSONResponse(
+        status_code=500,
+        content={"detail": "Internal server error"},
+    )
 
 
 @app.get("/network/account/{account_id}")

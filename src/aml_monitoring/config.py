@@ -39,7 +39,7 @@ class AppSettings(BaseSettings):
     config_path: str = Field(default="config/default.yaml", alias="AML_CONFIG_PATH")
     log_level: str = Field(default="INFO", alias="AML_LOG_LEVEL")
     database_url: str | None = Field(default=None, alias="AML_DATABASE_URL")
-    api_host: str = Field(default="0.0.0.0", alias="AML_API_HOST")
+    api_host: str = Field(default="127.0.0.1", alias="AML_API_HOST")
     api_port: int = Field(default=8000, alias="AML_API_PORT")
 
 
@@ -98,7 +98,7 @@ def _default_config() -> dict[str, Any]:
         "rules": {},
         "scoring": {"base_risk_per_customer": 10, "max_score": 100},
         "reporting": {"output_dir": "./reports"},
-        "api": {"host": "0.0.0.0", "port": 8000},
+        "api": {"host": "127.0.0.1", "port": 8000},
     }
 
 
