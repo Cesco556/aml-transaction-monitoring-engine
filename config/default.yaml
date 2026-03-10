@@ -20,23 +20,33 @@ rules:
     enabled: true
     threshold_amount: 10000
     currency_default: USD
+    severity: high
+    score_delta: 25.0
   rapid_velocity:
     enabled: true
     min_transactions: 5
     window_minutes: 15
+    severity: medium
+    score_delta: 20.0
   geo_mismatch:
     enabled: true
     window_minutes: 60
     max_countries_in_window: 2
+    severity: medium
+    score_delta: 15.0
   structuring_smurfing:
     enabled: true
     threshold_amount: 9500
     min_transactions: 3
     window_minutes: 60
+    severity: high
+    score_delta: 30.0
   sanctions_keyword:
     enabled: true
     list_version: "1.0"
     effective_date: "2026-01-01"
+    severity: high
+    score_delta: 30.0
     keywords:
       - sanctioned
       - ofac
@@ -46,6 +56,8 @@ rules:
     enabled: true
     list_version: "1.0"
     effective_date: "2026-01-01"
+    severity: high
+    score_delta: 25.0
     countries:
       - XX  # placeholder; replace with ISO codes (validation fails until overridden)
       - YY
@@ -64,6 +76,55 @@ scoring:
     low: 33
     medium: 66
     high: 100
+  severity_multipliers:
+    critical: 2.0
+    high: 1.5
+    medium: 1.0
+    low: 0.5
+  temporal_decay:
+    enabled: false  # enable for v2 scoring
+    windows:
+      - within_hours: 24
+        factor: 1.0
+      - within_hours: 168   # 7 days
+        factor: 0.7
+      - within_hours: 720   # 30 days
+        factor: 0.4
+    floor: 0.2
+  profiles:
+    conservative:
+      severity_multipliers:
+        critical: 2.5
+        high: 2.0
+        medium: 1.5
+        low: 1.0
+      thresholds:
+        low: 25
+        medium: 50
+        high: 100
+      base_risk_per_customer: 15
+    balanced:
+      severity_multipliers:
+        critical: 2.0
+        high: 1.5
+        medium: 1.0
+        low: 0.5
+      thresholds:
+        low: 33
+        medium: 66
+        high: 100
+      base_risk_per_customer: 10
+    aggressive:
+      severity_multipliers:
+        critical: 1.5
+        high: 1.0
+        medium: 0.7
+        low: 0.3
+      thresholds:
+        low: 45
+        medium: 75
+        high: 100
+      base_risk_per_customer: 5
 
 reporting:
   output_dir: ./reports
