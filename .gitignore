@@ -56,3 +56,4 @@ docs/PRODUCTION_READINESS_GAP_ANALYSIS.md
 docs/THREAD_B_AUDIT_REPORT.md
 docs/VETERAN_CRITIQUE_AND_2026_ROADMAP.md
 docs/archive/
+models/*.joblib

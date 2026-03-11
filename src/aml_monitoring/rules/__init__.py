@@ -4,6 +4,7 @@ from aml_monitoring.rules.base import BaseRule, RuleContext, RuleResult
 from aml_monitoring.rules.geo_mismatch import GeoMismatchRule
 from aml_monitoring.rules.high_risk_country import HighRiskCountryRule
 from aml_monitoring.rules.high_value import HighValueTransactionRule
+from aml_monitoring.rules.ml_anomaly import MLAnomalyRule
 from aml_monitoring.rules.network_ring import NetworkRingIndicatorRule
 from aml_monitoring.rules.rapid_velocity import RapidVelocityRule
 from aml_monitoring.rules.sanctions_keyword import SanctionsKeywordRule
@@ -28,6 +29,10 @@ def get_all_rules(config: dict) -> list[BaseRule]:
         rules.append(HighRiskCountryRule(cfg.get("high_risk_country", {})))
     if cfg.get("network_ring", {}).get("enabled", True):
         rules.append(NetworkRingIndicatorRule(cfg.get("network_ring", {})))
+    # ML Anomaly Detection (optional — requires trained model)
+    ml_cfg = config.get("ml", {}).get("anomaly_detection", {})
+    if ml_cfg.get("enabled", False):
+        rules.append(MLAnomalyRule(ml_cfg))
     return rules
 
 
@@ -42,4 +47,5 @@ __all__ = [
     "SanctionsKeywordRule",
     "HighRiskCountryRule",
     "NetworkRingIndicatorRule",
+    "MLAnomalyRule",
 ]
