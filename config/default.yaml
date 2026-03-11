@@ -170,6 +170,24 @@ security:
   request:
     max_body_size_bytes: 1048576  # 1 MB
 
+ml:
+  anomaly_detection:
+    enabled: true
+    model_path: models/isolation_forest.joblib
+    contamination: 0.05
+    n_estimators: 100
+    threshold: 0.7
+    severity: medium
+    score_delta: 20.0
+    features:
+      - amount_zscore
+      - velocity_1h
+      - velocity_24h
+      - counterparty_diversity
+      - country_diversity
+      - time_of_day_sin
+      - time_of_day_cos
+
 run_rules:
   chunk_size: 0  # 0 = no chunking (load all); set e.g. 5000 for bounded memory + checkpoint
 

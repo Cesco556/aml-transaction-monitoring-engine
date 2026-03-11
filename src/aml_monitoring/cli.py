@@ -490,6 +490,63 @@ def add_case_note_cmd(
     typer.echo(f"Added note to case {case_id}")
 
 
+@app.command("train-ml")
+def train_ml_cmd(
+    config: str | None = typer.Option(None, "--config", "-c", help="Config YAML path"),
+) -> None:
+    """Train the ML anomaly detection model on current transaction data."""
+    _ensure_db(config)
+    set_audit_context(str(uuid.uuid4()), os.environ.get("AML_ACTOR", "cli"))
+
+    try:
+        from aml_monitoring.ml.anomaly import train_anomaly_model
+    except ImportError:
+        typer.echo(
+            "ML dependencies not installed (scikit-learn, joblib). "
+            "Install with: poetry add scikit-learn joblib",
+            err=True,
+        )
+        raise typer.Exit(1)
+
+    cfg = get_config(config)
+    ml_cfg = cfg.get("ml", {}).get("anomaly_detection", {})
+    if not ml_cfg:
+        typer.echo("No ml.anomaly_detection section in config.", err=True)
+        raise typer.Exit(1)
+
+    with session_scope() as session:
+        try:
+            result = train_anomaly_model(session, ml_cfg)
+        except ValueError as e:
+            typer.echo(f"Training failed: {e}", err=True)
+            raise typer.Exit(1)
+
+        # Audit trail
+        session.add(
+            AuditLog(
+                correlation_id=get_correlation_id(),
+                action="ml_model_train",
+                entity_type="ml_model",
+                entity_id=result["data_hash"],
+                actor=get_actor(),
+                details_json={
+                    "model_path": result["model_path"],
+                    "sample_count": result["sample_count"],
+                    "feature_count": result["feature_count"],
+                    "anomaly_ratio": round(result["anomaly_ratio"], 4),
+                    "data_hash": result["data_hash"],
+                },
+            )
+        )
+
+    typer.echo("ML model trained successfully:")
+    typer.echo(f"  Model path:    {result['model_path']}")
+    typer.echo(f"  Samples:       {result['sample_count']}")
+    typer.echo(f"  Features:      {result['feature_count']}")
+    typer.echo(f"  Anomaly ratio: {result['anomaly_ratio']:.4f}")
+    typer.echo(f"  Data hash:     {result['data_hash']}")
+
+
 @app.command("reproduce-run")
 def reproduce_run_cmd(
     correlation_id: str = typer.Argument(..., help="Run correlation_id (UUID) to reproduce"),
