@@ -1,5 +1,7 @@
 # AML Transaction Monitoring Engine
 
+![CI](https://github.com/Cesco556/aml-transaction-monitoring-engine/actions/workflows/ci.yml/badge.svg)
+
 Production-grade AML (Anti-Money Laundering) transaction monitoring MVP for a fintech security portfolio. Ingests transactions (CSV/JSONL), runs rule-based detection and risk scoring, produces alerts and SAR-like reports, with a FastAPI and CLI interface.
 
 ## Dashboard (Screenshots)

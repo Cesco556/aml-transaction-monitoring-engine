@@ -118,32 +118,35 @@ def create_case(
         return _case_to_response(case)
 
 
-@cases_router.get("/cases", response_model=list[CaseResponse])
+@cases_router.get("/cases")
 def list_cases(
     status: str | None = Query(None),
     assigned_to: str | None = Query(None),
     priority: str | None = Query(None),
-    limit: int = Query(100, ge=1, le=1000),
-) -> list[CaseResponse]:
-    """List cases with optional filters."""
+    limit: int = Query(50, ge=1, le=1000),
+    cursor: str | None = Query(None, description="Opaque cursor for next page"),
+) -> dict[str, Any]:
+    """List cases with cursor-based pagination and optional filters."""
     from sqlalchemy import select
     from sqlalchemy.orm import selectinload
 
+    from aml_monitoring.pagination import paginate_query
+
     with session_scope() as session:
-        stmt = (
-            select(Case)
-            .options(selectinload(Case.items), selectinload(Case.notes))
-            .order_by(Case.created_at.desc())
-            .limit(limit)
-        )
+        stmt = select(Case).options(selectinload(Case.items), selectinload(Case.notes))
         if status is not None:
             stmt = stmt.where(Case.status == status)
         if assigned_to is not None:
             stmt = stmt.where(Case.assigned_to == assigned_to)
         if priority is not None:
             stmt = stmt.where(Case.priority == priority)
-        cases = list(session.execute(stmt).scalars().all())
-        return [_case_to_response(c) for c in cases]
+        items, next_cursor = paginate_query(
+            stmt, session, id_column=Case.id, cursor=cursor, limit=limit,
+        )
+        return {
+            "items": [_case_to_response(c) for c in items],
+            "next_cursor": next_cursor,
+        }
 
 
 @cases_router.get("/cases/{case_id}", response_model=CaseResponse)
