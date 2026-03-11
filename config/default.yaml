@@ -69,6 +69,29 @@ rules:
     severity: high
     score_delta: 40
 
+sanctions:
+  screening:
+    enabled: true
+    min_match_threshold: 0.85
+    algorithms:
+      - exact
+      - jaro_winkler
+      - levenshtein
+      - phonetic
+    lists:
+      ofac_sdn:
+        enabled: true
+        path: data/sanctions/sdn.csv
+        format: ofac_csv
+      custom:
+        enabled: true
+        path: data/sanctions/custom.csv
+        format: csv
+  pep:
+    enabled: true
+    min_match_threshold: 0.80
+    path: data/sanctions/pep.csv
+
 scoring:
   base_risk_per_customer: 10
   max_score: 100

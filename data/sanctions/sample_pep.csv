@@ -1,0 +1,11 @@
+name,position,country,risk_level,source,aliases
+Vladimir Petrov,President,RU,high,custom,V. Petrov|Vlad Petrov
+Maria Santos Silva,Finance Minister,BR,high,custom,Maria Santos|M. Silva
+Ahmed Hassan Ibrahim,Central Bank Governor,EG,high,custom,Ahmed Ibrahim|A. Hassan
+Li Wei Chen,Party Secretary,CN,high,custom,Li Chen|L.W. Chen
+Olga Kuznetsova,Deputy Prime Minister,RU,medium,custom,O. Kuznetsova
+Jean-Pierre Dubois,Foreign Minister,FR,medium,custom,JP Dubois|Jean Dubois
+Fatima Al-Rashid,Interior Minister,SA,high,custom,F. Al-Rashid|Fatima Rashid
+James Mwangi Kariuki,Treasury Secretary,KE,medium,custom,James Kariuki|J. Mwangi
+Ravi Shankar Gupta,Defense Secretary,IN,high,custom,R.S. Gupta|Ravi Gupta
+Ana Lucia Rodriguez,Attorney General,MX,medium,custom,Ana Rodriguez|A.L. Rodriguez

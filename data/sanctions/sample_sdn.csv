@@ -1,0 +1,21 @@
+ent_num,sdn_name,sdn_type,program,title,remarks,country,aliases
+10001,AHMAD AL-RASHID,individual,SDGT,Deputy Director,DOB 15 Mar 1970,SY,Ahmed Al Rashid|Ahmad Rashid
+10002,PETROMAX TRADING LLC,entity,IRAN,"",Vessel owner,IR,Petromax LLC|Petromax Trading
+10003,MUHAMMAD HASSAN KHAN,individual,SDGT,"",DOB 22 Jun 1985,PK,Mohammed Hassan Khan|M. Hassan
+10004,GOLDEN BRIDGE ENTERPRISES,entity,DPRK,"",Front company,KP,Golden Bridge Ltd|GB Enterprises
+10005,IVAN PETROV VOLKOV,individual,UKRAINE-EO13661,Colonel,DOB 01 Jan 1965,RU,Ivan Volkov|I. Petrov
+10006,DARK ENERGY SHIPPING CO,entity,IRAN,"",Shipping front,IR,Dark Energy Shipping|DE Shipping Co
+10007,AHMED BIN SALEM AL-DOSARI,individual,SDGT,Commander,DOB 10 Oct 1972,SA,Ahmed Al Dosari|Ahmed Salem
+10008,GLOBAL NEXUS HOLDINGS,entity,SDGT,"",Money laundering network,AE,Global Nexus|GN Holdings
+10009,ALI MOHAMMAD REZA,individual,IRAN,"",DOB 05 May 1980,IR,Ali Reza|A.M. Reza
+10010,RED STAR LOGISTICS LLC,entity,DPRK,"",Shipping front,CN,Red Star Logistics|RSL LLC
+10011,HASSAN ABDEL-FATTAH,individual,SDGT,"",DOB 12 Dec 1975,EG,Hassan Abdel Fattah|H. Fattah
+10012,ORIENTAL PEARL TRADING,entity,IRAN,"",Trade front,IR,Oriental Pearl|OP Trading
+10013,SERGEI NIKOLAEVICH IVANOV,individual,UKRAINE-EO13661,General,DOB 08 Aug 1960,RU,Sergei Ivanov|S.N. Ivanov
+10014,BLUE OCEAN MARITIME LTD,entity,IRAN,"",Vessel operator,IR,Blue Ocean Maritime|BOM Ltd
+10015,FATIMA AL-ZAHRA HUSSEIN,individual,SDGT,"",DOB 20 Feb 1988,IQ,Fatima Hussein|F. Al-Zahra
+10016,NORTH WIND ENERGY CORP,entity,DPRK,"",Energy front,KP,North Wind Energy|NW Energy Corp
+10017,YUSUF IBRAHIM OSMAN,individual,SDGT,Finance Chief,DOB 14 Apr 1978,SO,Yusuf Osman|Y. Ibrahim
+10018,SILK ROAD FINANCE GROUP,entity,SDGT,"",Hawala network,AF,Silk Road Finance|SRF Group
+10019,ABDULLAH MOHAMMED AL-QAHTANI,individual,SDGT,Recruiter,DOB 30 Sep 1982,SA,Abdullah Al-Qahtani|A. Mohammed
+10020,PHOENIX INTERNATIONAL TRADING,entity,IRAN,"",Procurement front,IR,Phoenix Trading|Phoenix Intl
