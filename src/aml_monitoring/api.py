@@ -202,6 +202,102 @@ def get_network_account(account_id: int) -> dict[str, Any]:
         }
 
 
+@app.get("/network/graph")
+def get_network_graph(
+    account_id: int | None = Query(None, description="Center account ID"),
+    hops: int = Query(2, ge=1, le=5, description="Number of hops from account"),
+) -> dict[str, Any]:
+    """Get subgraph around an account in D3.js format."""
+    from aml_monitoring.network.communities import detect_communities
+    from aml_monitoring.network.export import export_d3_json
+    from aml_monitoring.network.graph import build_transaction_graph, get_account_subgraph
+
+    with session_scope() as session:
+        if account_id is not None:
+            graph = get_account_subgraph(account_id, session, hops=hops)
+        else:
+            graph = build_transaction_graph(session)
+
+        communities = detect_communities(graph) if len(graph.nodes) > 0 else {}
+        return export_d3_json(graph, communities=communities)
+
+
+@app.get("/network/communities")
+def get_network_communities(
+    method: str = Query("louvain", description="louvain or label_propagation"),
+    min_alert_ratio: float = Query(0.3, ge=0.0, le=1.0),
+) -> dict[str, Any]:
+    """Detect communities and return with risk scores."""
+    from aml_monitoring.network.communities import detect_communities, get_suspicious_communities
+    from aml_monitoring.network.graph import build_transaction_graph
+
+    with session_scope() as session:
+        graph = build_transaction_graph(session)
+        communities = detect_communities(graph, method=method)
+        suspicious = get_suspicious_communities(graph, communities, min_alert_ratio=min_alert_ratio)
+
+        return {
+            "total_communities": len(communities),
+            "suspicious_count": len(suspicious),
+            "communities": [
+                {
+                    "id": c.id,
+                    "accounts": c.accounts,
+                    "total_alerts": c.total_alerts,
+                    "alert_ratio": c.alert_ratio,
+                    "total_volume": c.total_volume,
+                    "risk_score": c.risk_score,
+                }
+                for c in suspicious
+            ],
+        }
+
+
+@app.get("/network/path")
+def get_network_path(
+    source: int = Query(..., alias="from", description="Source account ID"),
+    target: int = Query(..., alias="to", description="Target account ID"),
+    max_hops: int = Query(4, ge=1, le=10),
+) -> dict[str, Any]:
+    """Find paths between two accounts."""
+    from aml_monitoring.network.graph import build_transaction_graph
+    from aml_monitoring.network.paths import find_all_paths, find_shortest_path
+
+    with session_scope() as session:
+        graph = build_transaction_graph(session)
+        shortest = find_shortest_path(graph, source, target)
+        all_paths = find_all_paths(graph, source, target, max_hops=max_hops)
+
+        return {
+            "source": source,
+            "target": target,
+            "shortest_path": shortest,
+            "all_paths": all_paths,
+            "path_count": len(all_paths),
+        }
+
+
+@app.get("/network/flow")
+def get_network_flow(
+    account_id: int = Query(..., description="Account ID to trace"),
+    direction: str = Query("out", description="out or in"),
+    depth: int = Query(3, ge=1, le=5),
+) -> dict[str, Any]:
+    """Trace money flow from/to an account."""
+    from aml_monitoring.network.paths import flow_tree_to_dict, trace_money_flow
+
+    with session_scope() as session:
+        flow = trace_money_flow(
+            session, account_id, direction=direction, max_depth=depth
+        )
+        return {
+            "account_id": account_id,
+            "direction": direction,
+            "max_depth": depth,
+            "flow": flow_tree_to_dict(flow),
+        }
+
+
 @app.get("/health")
 def health() -> dict[str, Any]:
     """Liveness and version; db_status indicates DB connectivity."""

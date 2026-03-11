@@ -30,6 +30,7 @@ joblib = "^1.5.3"
 rapidfuzz = "^3.14.3"
 jellyfish = "^1.2.1"
 redis = "^7.3.0"
+networkx = {version = ">=3.2,<4", python = ">=3.11,<3.14"}
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.3.0"

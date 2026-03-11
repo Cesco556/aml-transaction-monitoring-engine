@@ -905,5 +905,79 @@ def stream_status_cmd(
             typer.echo(f"Processed: {processed_path} (not found)")
 
 
+@app.command("network-analyze")
+def network_analyze_cmd(
+    config: str | None = typer.Option(None, "--config", "-c", help="Config YAML path"),
+    method: str = typer.Option("louvain", "--method", "-m", help="louvain or label_propagation"),
+    min_alert_ratio: float = typer.Option(0.3, "--min-alert-ratio", help="Min alert ratio"),
+) -> None:
+    """Run community detection on the transaction network and output suspicious communities."""
+    _ensure_db(config)
+
+    from aml_monitoring.network.communities import detect_communities, get_suspicious_communities
+    from aml_monitoring.network.graph import build_transaction_graph
+
+    with session_scope() as session:
+        graph = build_transaction_graph(session)
+        typer.echo(f"Graph: {len(graph.nodes)} nodes, {len(graph.edges)} edges")
+
+        communities = detect_communities(graph, method=method)
+        typer.echo(f"Communities detected: {len(communities)} (method={method})")
+
+        suspicious = get_suspicious_communities(
+            graph, communities, min_alert_ratio=min_alert_ratio
+        )
+        if not suspicious:
+            typer.echo("No suspicious communities found.")
+            return
+
+        typer.echo(f"\nSuspicious communities ({len(suspicious)}):")
+        typer.echo("-" * 70)
+        for c in suspicious:
+            typer.echo(
+                f"  Community {c.id}: {len(c.accounts)} accounts | "
+                f"alerts={c.total_alerts} | ratio={c.alert_ratio:.2%} | "
+                f"volume={c.total_volume:,.2f} | risk={c.risk_score:.1f}"
+            )
+            typer.echo(f"    Accounts: {c.accounts}")
+
+
+@app.command("network-export")
+def network_export_cmd(
+    fmt: str = typer.Argument("d3", help="Export format: d3 or cytoscape"),
+    output: str | None = typer.Option(None, "--output", "-o", help="Output file path"),
+    config: str | None = typer.Option(None, "--config", "-c", help="Config YAML path"),
+) -> None:
+    """Export the transaction network graph to JSON (D3 or Cytoscape format)."""
+    _ensure_db(config)
+
+    from aml_monitoring.network.communities import detect_communities
+    from aml_monitoring.network.export import export_cytoscape, export_d3_json
+    from aml_monitoring.network.graph import build_transaction_graph
+
+    if fmt not in ("d3", "cytoscape"):
+        typer.echo("Format must be 'd3' or 'cytoscape'", err=True)
+        raise typer.Exit(1)
+
+    with session_scope() as session:
+        graph = build_transaction_graph(session)
+        communities = detect_communities(graph) if len(graph.nodes) > 0 else {}
+
+        if fmt == "d3":
+            data = export_d3_json(graph, communities=communities)
+        else:
+            data = export_cytoscape(graph, communities=communities)
+
+    out_path = output or f"network_graph_{fmt}.json"
+    Path(out_path).parent.mkdir(parents=True, exist_ok=True)
+    with open(out_path, "w") as f:
+        json.dump(data, f, indent=2, default=str)
+
+    typer.echo(
+        f"Exported {len(graph.nodes)} nodes, {len(graph.edges)} edges "
+        f"to {out_path} (format={fmt})"
+    )
+
+
 if __name__ == "__main__":
     app()
