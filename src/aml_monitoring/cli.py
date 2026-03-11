@@ -563,5 +563,181 @@ def reproduce_run_cmd(
     typer.echo(f"Wrote bundle to {path}")
 
 
+@app.command("screen-name")
+def screen_name_cmd(
+    name: str = typer.Argument(..., help="Name to screen against all loaded lists"),
+    threshold: float = typer.Option(0.80, "--threshold", "-t", help="Minimum match threshold"),
+    config: str | None = typer.Option(None, "--config", "-c", help="Config YAML path"),
+) -> None:
+    """Screen a single name against all loaded sanctions and PEP lists."""
+    cfg = get_config(config)
+    sanctions_cfg = cfg.get("sanctions", {})
+
+    try:
+        from aml_monitoring.sanctions.lists import SanctionsList
+        from aml_monitoring.sanctions.ofac import parse_sdn_csv
+        from aml_monitoring.sanctions.pep import PEPList
+    except ImportError:
+        typer.echo(
+            "Sanctions module not available. Install rapidfuzz and jellyfish.",
+            err=True,
+        )
+        raise typer.Exit(1)
+
+    typer.echo(f"Screening name: {name!r} (threshold={threshold})")
+    typer.echo("-" * 60)
+
+    # Load sanctions lists
+    screening_cfg = sanctions_cfg.get("screening", {})
+    lists_cfg = screening_cfg.get("lists", {})
+    algorithms = screening_cfg.get("algorithms", ["exact", "jaro_winkler", "levenshtein", "phonetic"])
+    hit_count = 0
+
+    for list_name, list_conf in lists_cfg.items():
+        if not list_conf.get("enabled", True):
+            continue
+        path = list_conf.get("path", "")
+        fmt = list_conf.get("format", "csv")
+        if not path or not Path(path).exists():
+            continue
+        sl = SanctionsList(source=list_name)
+        if fmt == "ofac_csv":
+            entries = parse_sdn_csv(path)
+            sl.load_entries(entries)
+        elif fmt == "json":
+            sl.load_json(path)
+        else:
+            sl.load_csv(path)
+        matches = sl.search(name, threshold=threshold, algorithms=algorithms)
+        for m in matches:
+            hit_count += 1
+            typer.echo(
+                f"  [SANCTIONS] {m.matched_alias} | list={list_name} | "
+                f"score={m.score:.2%} | algo={m.algorithm} | "
+                f"type={m.entry.entity_type} | country={m.entry.country}"
+            )
+
+    # PEP list
+    pep_cfg = sanctions_cfg.get("pep", {})
+    if pep_cfg.get("enabled", True):
+        pep_path = pep_cfg.get("path", "")
+        pep_threshold = float(pep_cfg.get("min_match_threshold", 0.80))
+        if pep_path and Path(pep_path).exists():
+            pl = PEPList(source="pep")
+            pl.load_csv(pep_path)
+            matches = pl.search(name, threshold=min(threshold, pep_threshold), algorithms=algorithms)
+            for m in matches:
+                hit_count += 1
+                typer.echo(
+                    f"  [PEP] {m.matched_alias} | position={m.entry.position} | "
+                    f"score={m.score:.2%} | algo={m.algorithm} | "
+                    f"country={m.entry.country} | risk={m.entry.risk_level}"
+                )
+
+    typer.echo("-" * 60)
+    if hit_count == 0:
+        typer.echo("No matches found.")
+    else:
+        typer.echo(f"Total matches: {hit_count}")
+
+
+@app.command("load-sanctions")
+def load_sanctions_cmd(
+    path: str = typer.Argument(..., help="Path to sanctions list file (CSV or JSON)"),
+    fmt: str = typer.Option("csv", "--format", "-f", help="File format: csv, json, ofac_csv"),
+) -> None:
+    """Load and validate a sanctions list file."""
+    p = Path(path)
+    if not p.exists():
+        typer.echo(f"File not found: {path}", err=True)
+        raise typer.Exit(1)
+
+    try:
+        from aml_monitoring.sanctions.lists import SanctionsList
+        from aml_monitoring.sanctions.ofac import parse_sdn_csv
+    except ImportError:
+        typer.echo("Sanctions module not available.", err=True)
+        raise typer.Exit(1)
+
+    sl = SanctionsList(source=p.stem)
+    if fmt == "ofac_csv":
+        entries = parse_sdn_csv(path)
+        sl.load_entries(entries)
+    elif fmt == "json":
+        sl.load_json(path)
+    else:
+        sl.load_csv(path)
+
+    typer.echo(f"Loaded {sl.entry_count} entries from {path} (format={fmt})")
+    for entry in sl.entries[:5]:
+        aliases = ", ".join(entry.aliases[:3]) if entry.aliases else "none"
+        typer.echo(f"  {entry.name} [{entry.entity_type}] aliases={aliases}")
+    if sl.entry_count > 5:
+        typer.echo(f"  ... and {sl.entry_count - 5} more")
+
+
+@app.command("sanctions-status")
+def sanctions_status_cmd(
+    config: str | None = typer.Option(None, "--config", "-c", help="Config YAML path"),
+) -> None:
+    """Show loaded sanctions lists, entry counts, and configuration."""
+    cfg = get_config(config)
+    sanctions_cfg = cfg.get("sanctions", {})
+    screening_cfg = sanctions_cfg.get("screening", {})
+
+    typer.echo("Sanctions Screening Configuration")
+    typer.echo("=" * 50)
+    typer.echo(f"  Enabled:    {screening_cfg.get('enabled', False)}")
+    typer.echo(f"  Threshold:  {screening_cfg.get('min_match_threshold', 0.85)}")
+    typer.echo(f"  Algorithms: {', '.join(screening_cfg.get('algorithms', []))}")
+    typer.echo()
+
+    lists_cfg = screening_cfg.get("lists", {})
+    typer.echo("Sanctions Lists:")
+    for list_name, list_conf in lists_cfg.items():
+        enabled = list_conf.get("enabled", True)
+        path = list_conf.get("path", "")
+        exists = Path(path).exists() if path else False
+        count = "?"
+        if exists:
+            try:
+                from aml_monitoring.sanctions.lists import SanctionsList
+                from aml_monitoring.sanctions.ofac import parse_sdn_csv
+
+                sl = SanctionsList(source=list_name)
+                fmt = list_conf.get("format", "csv")
+                if fmt == "ofac_csv":
+                    entries = parse_sdn_csv(path)
+                    sl.load_entries(entries)
+                elif fmt == "json":
+                    sl.load_json(path)
+                else:
+                    sl.load_csv(path)
+                count = str(sl.entry_count)
+            except Exception:
+                count = "error"
+        status_icon = "✓" if enabled and exists else "✗"
+        typer.echo(f"  {status_icon} {list_name}: {path} ({count} entries, enabled={enabled})")
+
+    pep_cfg = sanctions_cfg.get("pep", {})
+    typer.echo()
+    typer.echo("PEP Screening:")
+    pep_enabled = pep_cfg.get("enabled", False)
+    pep_path = pep_cfg.get("path", "")
+    pep_exists = Path(pep_path).exists() if pep_path else False
+    pep_count = "?"
+    if pep_exists:
+        try:
+            from aml_monitoring.sanctions.pep import PEPList
+
+            pl = PEPList()
+            pl.load_csv(pep_path)
+            pep_count = str(pl.entry_count)
+        except Exception:
+            pep_count = "error"
+    pep_icon = "✓" if pep_enabled and pep_exists else "✗"
+    typer.echo(f"  {pep_icon} PEP: {pep_path} ({pep_count} entries, enabled={pep_enabled})")
+
+
 if __name__ == "__main__":
     app()

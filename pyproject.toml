@@ -27,6 +27,8 @@ streamlit = "^1.40.0"
 slowapi = "^0.1.9"
 scikit-learn = "^1.8.0"
 joblib = "^1.5.3"
+rapidfuzz = "^3.14.3"
+jellyfish = "^1.2.1"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.3.0"
