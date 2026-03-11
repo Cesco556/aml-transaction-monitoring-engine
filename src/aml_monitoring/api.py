@@ -100,6 +100,11 @@ setup_security(app)
 
 app.include_router(cases_router)
 
+# WebSocket endpoint for real-time alert notifications
+from aml_monitoring.streaming.websocket import websocket_alerts_endpoint
+
+app.websocket("/ws/alerts")(websocket_alerts_endpoint)
+
 
 # ---------------------------------------------------------------------------
 # Custom OpenAPI schema with security definitions

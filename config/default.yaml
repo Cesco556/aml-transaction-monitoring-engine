@@ -217,3 +217,23 @@ run_rules:
 stream_simulate:
   delay_seconds: 1
   batch_size: 10
+
+streaming:
+  enabled: true
+  backend: redis  # redis or file
+  redis:
+    url: redis://localhost:6379
+    stream_key: aml:transactions
+    consumer_group: aml-workers
+    consumer_name: worker-1
+    batch_size: 10
+    poll_interval_ms: 1000
+  file:
+    input_path: data/stream/incoming.jsonl
+    processed_path: data/stream/processed.jsonl
+  deduplication:
+    enabled: true
+    window_seconds: 3600
+  websocket:
+    enabled: true
+    path: /ws/alerts

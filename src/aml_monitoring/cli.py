@@ -739,5 +739,171 @@ def sanctions_status_cmd(
     typer.echo(f"  {pep_icon} PEP: {pep_path} ({pep_count} entries, enabled={pep_enabled})")
 
 
+@app.command("stream-consume")
+def stream_consume_cmd(
+    config: str | None = typer.Option(None, "--config", "-c", help="Config YAML path"),
+    backend: str | None = typer.Option(None, "--backend", "-b", help="redis or file"),
+    max_messages: int | None = typer.Option(
+        None, "--max-messages", "-n", help="Stop after N messages (default: run forever)"
+    ),
+) -> None:
+    """Start the stream consumer (reads transactions, runs rules, creates alerts)."""
+    _ensure_db(config)
+    set_audit_context(str(uuid.uuid4()), os.environ.get("AML_ACTOR", "cli"))
+    cfg = get_config(config)
+    stream_cfg = cfg.get("streaming", {})
+    be = backend or stream_cfg.get("backend", "file")
+
+    if be == "redis":
+        redis_cfg = stream_cfg.get("redis", {})
+        try:
+            from aml_monitoring.streaming.consumer import RedisStreamConsumer
+
+            consumer = RedisStreamConsumer(
+                redis_url=redis_cfg.get("url", "redis://localhost:6379"),
+                stream_key=redis_cfg.get("stream_key", "aml:transactions"),
+                consumer_group=redis_cfg.get("consumer_group", "aml-workers"),
+                consumer_name=redis_cfg.get("consumer_name", "worker-1"),
+                config=cfg,
+                batch_size=int(redis_cfg.get("batch_size", 10)),
+                poll_interval_ms=int(redis_cfg.get("poll_interval_ms", 1000)),
+            )
+        except ImportError:
+            typer.echo(
+                "redis package not installed. Use --backend file or install: poetry add redis",
+                err=True,
+            )
+            raise typer.Exit(1)
+    else:
+        file_cfg = stream_cfg.get("file", {})
+        from aml_monitoring.streaming.consumer import FileStreamConsumer
+
+        consumer = FileStreamConsumer(
+            input_path=file_cfg.get("input_path", "data/stream/incoming.jsonl"),
+            processed_path=file_cfg.get("processed_path", "data/stream/processed.jsonl"),
+            config=cfg,
+            batch_size=int(stream_cfg.get("redis", {}).get("batch_size", 10)),
+        )
+
+    typer.echo(f"Starting stream consumer (backend={be})...")
+    consumer.consume(max_messages=max_messages)
+    typer.echo(
+        f"Consumer stopped: {consumer.processed_count} processed, "
+        f"{consumer.alert_count} alerts created."
+    )
+
+
+@app.command("stream-produce")
+def stream_produce_cmd(
+    path: str = typer.Argument(..., help="Path to JSONL file to publish"),
+    config: str | None = typer.Option(None, "--config", "-c", help="Config YAML path"),
+    backend: str | None = typer.Option(None, "--backend", "-b", help="redis or file"),
+) -> None:
+    """Publish transactions from a JSONL file to the stream."""
+    cfg = get_config(config)
+    stream_cfg = cfg.get("streaming", {})
+    be = backend or stream_cfg.get("backend", "file")
+
+    if be == "redis":
+        redis_cfg = stream_cfg.get("redis", {})
+        try:
+            from aml_monitoring.streaming.producer import RedisStreamProducer
+
+            producer = RedisStreamProducer(
+                redis_url=redis_cfg.get("url", "redis://localhost:6379"),
+                stream_key=redis_cfg.get("stream_key", "aml:transactions"),
+            )
+        except ImportError:
+            typer.echo("redis package not installed.", err=True)
+            raise typer.Exit(1)
+    else:
+        file_cfg = stream_cfg.get("file", {})
+        from aml_monitoring.streaming.producer import FileStreamProducer
+
+        producer = FileStreamProducer(
+            output_path=file_cfg.get("input_path", "data/stream/incoming.jsonl"),
+        )
+
+    p = Path(path)
+    if not p.exists():
+        typer.echo(f"File not found: {path}", err=True)
+        raise typer.Exit(1)
+
+    count = 0
+    with open(p, encoding="utf-8") as f:
+        for line in f:
+            line = line.strip()
+            if not line:
+                continue
+            try:
+                msg = json.loads(line)
+            except json.JSONDecodeError:
+                continue
+            producer.publish(msg)
+            count += 1
+
+    producer.close()
+    typer.echo(f"Published {count} messages (backend={be}).")
+
+
+@app.command("stream-status")
+def stream_status_cmd(
+    config: str | None = typer.Option(None, "--config", "-c", help="Config YAML path"),
+) -> None:
+    """Show stream status (consumer group info, lag, last processed)."""
+    cfg = get_config(config)
+    stream_cfg = cfg.get("streaming", {})
+    be = stream_cfg.get("backend", "file")
+
+    typer.echo(f"Streaming backend: {be}")
+    typer.echo(f"Enabled: {stream_cfg.get('enabled', False)}")
+
+    if be == "redis":
+        redis_cfg = stream_cfg.get("redis", {})
+        try:
+            from aml_monitoring.streaming.consumer import RedisStreamConsumer
+
+            consumer = RedisStreamConsumer(
+                redis_url=redis_cfg.get("url", "redis://localhost:6379"),
+                stream_key=redis_cfg.get("stream_key", "aml:transactions"),
+                consumer_group=redis_cfg.get("consumer_group", "aml-workers"),
+                consumer_name=redis_cfg.get("consumer_name", "worker-1"),
+                config=cfg,
+            )
+            info = consumer.stream_info()
+            consumer.close()
+
+            if "error" in info:
+                typer.echo(f"Error: {info['error']}")
+            else:
+                typer.echo(f"Stream key: {info['stream_key']}")
+                typer.echo(f"Stream length: {info['length']}")
+                for g in info.get("groups", []):
+                    typer.echo(
+                        f"  Group: {g.get('name')} | consumers: {g.get('consumers')} | "
+                        f"pending: {g.get('pending')} | last-delivered: {g.get('last-delivered-id')}"
+                    )
+        except ImportError:
+            typer.echo("redis package not installed.", err=True)
+    else:
+        file_cfg = stream_cfg.get("file", {})
+        input_path = Path(file_cfg.get("input_path", "data/stream/incoming.jsonl"))
+        processed_path = Path(file_cfg.get("processed_path", "data/stream/processed.jsonl"))
+
+        if input_path.exists():
+            with open(input_path) as f:
+                lines = sum(1 for line in f if line.strip())
+            typer.echo(f"Input file: {input_path} ({lines} messages)")
+        else:
+            typer.echo(f"Input file: {input_path} (not found)")
+
+        if processed_path.exists():
+            with open(processed_path) as f:
+                processed = sum(1 for line in f if line.strip())
+            typer.echo(f"Processed: {processed_path} ({processed} acknowledged)")
+        else:
+            typer.echo(f"Processed: {processed_path} (not found)")
+
+
 if __name__ == "__main__":
     app()
