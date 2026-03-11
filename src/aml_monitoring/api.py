@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import time
 import uuid
 from contextlib import asynccontextmanager
 from datetime import UTC, datetime
@@ -13,6 +14,8 @@ from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.requests import Request
 
 from aml_monitoring import ENGINE_VERSION, RULES_VERSION
+
+_STARTUP_TIME: float = time.time()
 from aml_monitoring.audit_context import get_correlation_id, set_audit_context
 from aml_monitoring.auth import require_api_key_write
 from aml_monitoring.cases_api import cases_router
@@ -222,6 +225,72 @@ def health() -> dict[str, Any]:
     }
 
 
+@app.get("/ready")
+def readiness() -> dict[str, Any]:
+    """Readiness check: DB connectivity + ML model availability."""
+    from pathlib import Path
+
+    from sqlalchemy import text
+
+    from aml_monitoring.db import get_engine
+
+    checks: dict[str, str] = {}
+
+    # DB connectivity
+    try:
+        engine = get_engine()
+        with engine.connect() as conn:
+            conn.execute(text("SELECT 1"))
+        checks["database"] = "ok"
+    except Exception:
+        checks["database"] = "error"
+
+    # ML model availability
+    model_path = Path("models/anomaly_model.joblib")
+    checks["ml_model"] = "ok" if model_path.exists() else "unavailable"
+
+    ready = checks["database"] == "ok"
+    status_code = 200 if ready else 503
+    from fastapi.responses import JSONResponse
+
+    return JSONResponse(
+        status_code=status_code,
+        content={"ready": ready, "checks": checks},
+    )
+
+
+@app.get("/metrics")
+def metrics() -> dict[str, Any]:
+    """Basic operational metrics: counts and uptime."""
+    from sqlalchemy import func, select
+
+    from aml_monitoring.db import get_engine
+    from aml_monitoring.models import Alert, Case, Transaction
+
+    uptime_seconds = round(time.time() - _STARTUP_TIME, 2)
+    counts: dict[str, int] = {}
+
+    try:
+        engine = get_engine()
+        with engine.connect() as conn:
+            for label, model in [
+                ("transactions", Transaction),
+                ("alerts", Alert),
+                ("cases", Case),
+            ]:
+                result = conn.execute(select(func.count()).select_from(model.__table__))
+                counts[label] = result.scalar() or 0
+    except Exception:
+        counts = {"transactions": -1, "alerts": -1, "cases": -1}
+
+    return {
+        "uptime_seconds": uptime_seconds,
+        "engine_version": ENGINE_VERSION,
+        "rules_version": RULES_VERSION,
+        "counts": counts,
+    }
+
+
 @app.post("/score", response_model=ScoreResponse)
 def score_transaction(body: ScoreRequest) -> ScoreResponse:
     """Score a single transaction (uses DB for velocity/geo/structuring if account exists)."""
@@ -286,23 +355,31 @@ def score_transaction(body: ScoreRequest) -> ScoreResponse:
     )
 
 
-@app.get("/alerts", response_model=list[AlertResponse])
+@app.get("/alerts")
 def list_alerts(
-    limit: int = Query(100, ge=1, le=1000),
+    limit: int = Query(50, ge=1, le=1000),
+    cursor: str | None = Query(None, description="Opaque cursor for next page"),
     severity: str | None = Query(None),
     correlation_id: str | None = Query(None, description="Filter by run correlation_id"),
-) -> list[AlertResponse]:
-    """Fetch alerts with optional severity and correlation_id filter."""
+) -> dict[str, Any]:
+    """Fetch alerts with cursor-based pagination and optional filters."""
     from sqlalchemy import select
 
+    from aml_monitoring.pagination import paginate_query
+
     with session_scope() as session:
-        stmt = select(Alert).order_by(Alert.created_at.desc()).limit(limit)
+        stmt = select(Alert)
         if severity:
             stmt = stmt.where(Alert.severity == severity)
         if correlation_id is not None:
             stmt = stmt.where(Alert.correlation_id == correlation_id)
-        alerts = list(session.execute(stmt).scalars().all())
-        return [AlertResponse.model_validate(a) for a in alerts]
+        items, next_cursor = paginate_query(
+            stmt, session, id_column=Alert.id, cursor=cursor, limit=limit,
+        )
+        return {
+            "items": [AlertResponse.model_validate(a) for a in items],
+            "next_cursor": next_cursor,
+        }
 
 
 @app.patch("/alerts/{alert_id}", response_model=AlertResponse)

@@ -88,7 +88,9 @@ def test_score_transaction_stateless(api_client: TestClient) -> None:
 def test_list_alerts_empty(api_client: TestClient) -> None:
     resp = api_client.get("/alerts", params={"limit": 10})
     assert resp.status_code == 200
-    assert resp.json() == []
+    data = resp.json()
+    assert data["items"] == []
+    assert data["next_cursor"] is None
 
 
 def test_network_account_returns_edges(api_client: TestClient) -> None:
@@ -176,8 +178,8 @@ def test_alerts_filter_by_correlation_id(api_client: TestClient) -> None:
     r1 = api_client.get("/alerts", params={"correlation_id": "cid-run-1"})
     r2 = api_client.get("/alerts", params={"correlation_id": "cid-run-2"})
     assert r1.status_code == 200 and r2.status_code == 200
-    alerts1 = r1.json()
-    alerts2 = r2.json()
+    alerts1 = r1.json()["items"]
+    alerts2 = r2.json()["items"]
     ids1 = {a["id"] for a in alerts1}
     ids2 = {a["id"] for a in alerts2}
     assert ids1 & ids2 == set(), "alerts must not overlap between correlation_id runs"
@@ -271,7 +273,7 @@ def test_patch_alert_updates_status_and_disposition(api_client: TestClient) -> N
     assert "X-Correlation-ID" in resp.headers
     list_resp = api_client.get("/alerts", params={"limit": 10})
     assert list_resp.status_code == 200
-    alerts = list_resp.json()
+    alerts = list_resp.json()["items"]
     found = next((x for x in alerts if x["id"] == alert_id), None)
     assert found is not None
     assert found["status"] == "closed"

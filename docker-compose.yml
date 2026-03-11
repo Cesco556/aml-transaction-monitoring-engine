@@ -1,7 +1,56 @@
-# Local PostgreSQL for AML engine (faster run-rules than SQLite).
-# Usage: docker-compose up -d   then set AML_DATABASE_URL and run migrations.
+# AML Transaction Monitoring Engine — Full Stack
+# Usage: docker-compose up -d
 
 services:
+  api:
+    build: .
+    container_name: aml-api
+    ports:
+      - "8000:8000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    environment:
+      - DATABASE_URL=postgresql://aml:aml@postgres:5432/aml
+      - REDIS_URL=redis://redis:6379/0
+      - AML_API_HOST=0.0.0.0
+      - AML_ALLOW_SCHEMA_UPGRADE=false
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 15s
+
+  dashboard:
+    build: .
+    container_name: aml-dashboard
+    command: streamlit run scripts/dashboard.py --server.port 8501 --server.address 0.0.0.0
+    ports:
+      - "8501:8501"
+    depends_on:
+      api:
+        condition: service_healthy
+    environment:
+      - DATABASE_URL=postgresql://aml:aml@postgres:5432/aml
+      - AML_API_URL=http://api:8000
+
+  worker:
+    build: .
+    container_name: aml-worker
+    command: poetry run aml stream-consume
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    environment:
+      - DATABASE_URL=postgresql://aml:aml@postgres:5432/aml
+      - REDIS_URL=redis://redis:6379/0
+    restart: unless-stopped
+
   postgres:
     image: postgres:16-alpine
     container_name: aml-postgres
@@ -15,6 +64,17 @@ services:
       - aml_pgdata:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U aml -d aml"]
+      interval: 3s
+      timeout: 3s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    container_name: aml-redis
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
       interval: 3s
       timeout: 3s
       retries: 5
