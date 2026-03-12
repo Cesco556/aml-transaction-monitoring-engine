@@ -153,6 +153,19 @@ reporting:
   output_dir: ./reports
   sar_format: true
   include_evidence: true
+  sar:
+    regulation: fincen
+    filing_deadline_days: 30
+    extended_deadline_days: 60
+    filer:
+      name: "AML Compliance Department"
+      ein: "00-0000000"
+      address: "123 Compliance St"
+  pdf:
+    output_dir: ./reports/pdf
+    logo_path: null
+  audit:
+    output_dir: ./reports/audit
 
 api:
   host: 127.0.0.1
