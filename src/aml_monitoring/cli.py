@@ -979,5 +979,138 @@ def network_export_cmd(
     )
 
 
+@app.command("report-kpis")
+def report_kpis_cmd(
+    period_days: int = typer.Option(30, "--period", "-p", help="Number of days to look back"),
+    config: str | None = typer.Option(None, "--config", "-c", help="Config YAML path"),
+) -> None:
+    """Print dashboard KPIs for the given period."""
+    from dataclasses import asdict
+
+    from aml_monitoring.reporting.kpis import compute_kpis
+
+    _ensure_db(config)
+    with session_scope() as session:
+        kpis = compute_kpis(session, period_days=period_days)
+    typer.echo(f"=== Dashboard KPIs (last {period_days} days) ===")
+    typer.echo(f"Total alerts:            {kpis.total_alerts}")
+    typer.echo(f"Alerts by severity:      {kpis.alerts_by_severity}")
+    typer.echo(f"Alert-to-SAR rate:       {kpis.alert_to_sar_rate:.2%}")
+    typer.echo(f"False positive rate:     {kpis.false_positive_rate:.2%}")
+    typer.echo(f"Total dispositioned:     {kpis.total_dispositioned}")
+    avg = f"{kpis.avg_investigation_days:.1f}" if kpis.avg_investigation_days is not None else "N/A"
+    typer.echo(f"Avg investigation (days):{avg}")
+    typer.echo(
+        f"Case backlog:            <7d={kpis.backlog_under_7d} | "
+        f"7-14d={kpis.backlog_7_14d} | 14-30d={kpis.backlog_14_30d} | "
+        f">30d={kpis.backlog_over_30d}"
+    )
+    typer.echo(f"Top rules:               {kpis.top_triggered_rules[:5]}")
+
+
+@app.command("report-sar")
+def report_sar_cmd(
+    case_id: int = typer.Argument(..., help="Case ID to generate SAR for"),
+    output: str | None = typer.Option(None, "--output", "-o", help="Output file path (JSON)"),
+    xml: bool = typer.Option(False, "--xml", help="Also generate XML output"),
+    config: str | None = typer.Option(None, "--config", "-c", help="Config YAML path"),
+) -> None:
+    """Generate a FinCEN SAR report for a case."""
+    from aml_monitoring.reporting.sar_fincen import generate_fincen_sar
+
+    _ensure_db(config)
+    set_audit_context(str(uuid.uuid4()), os.environ.get("AML_ACTOR", "cli"))
+    with session_scope() as session:
+        try:
+            report = generate_fincen_sar(case_id, session, config_path=config)
+        except ValueError as e:
+            typer.echo(str(e), err=True)
+            raise typer.Exit(1) from e
+
+    if output:
+        out_path = Path(output)
+    else:
+        out_path = Path(f"sar_case_{case_id}.json")
+    out_path.parent.mkdir(parents=True, exist_ok=True)
+    out_path.write_text(report.to_json())
+    typer.echo(f"SAR JSON: {out_path}")
+
+    if xml:
+        xml_path = out_path.with_suffix(".xml")
+        xml_path.write_text(report.to_xml())
+        typer.echo(f"SAR XML:  {xml_path}")
+
+
+@app.command("report-pdf")
+def report_pdf_cmd(
+    case_id: int = typer.Argument(..., help="Case ID to generate PDF for"),
+    output: str | None = typer.Option(None, "--output", "-o", help="Output PDF path"),
+    config: str | None = typer.Option(None, "--config", "-c", help="Config YAML path"),
+) -> None:
+    """Generate a PDF investigation report for a case."""
+    from aml_monitoring.reporting.pdf_report import generate_pdf_report
+
+    _ensure_db(config)
+    with session_scope() as session:
+        try:
+            out = output or f"reports/pdf/case_{case_id}.pdf"
+            path = generate_pdf_report(case_id, session, output_path=out, config_path=config)
+        except ValueError as e:
+            typer.echo(str(e), err=True)
+            raise typer.Exit(1) from e
+    typer.echo(f"PDF report: {path}")
+
+
+@app.command("report-audit")
+def report_audit_cmd(
+    date_from: str = typer.Option(..., "--from", help="Start date (YYYY-MM-DD)"),
+    date_to: str = typer.Option(..., "--to", help="End date (YYYY-MM-DD)"),
+    output_dir: str | None = typer.Option(None, "--output", "-o", help="Output directory"),
+    config: str | None = typer.Option(None, "--config", "-c", help="Config YAML path"),
+) -> None:
+    """Generate an audit export ZIP for the given date range."""
+    from aml_monitoring.reporting.audit_export import export_audit_package
+
+    _ensure_db(config)
+    try:
+        dt_from = datetime.strptime(date_from, "%Y-%m-%d").replace(tzinfo=UTC)
+        dt_to = datetime.strptime(date_to, "%Y-%m-%d").replace(
+            hour=23, minute=59, second=59, tzinfo=UTC
+        )
+    except ValueError:
+        typer.echo("Dates must be YYYY-MM-DD format", err=True)
+        raise typer.Exit(1)
+
+    cfg = get_config(config)
+    out_dir = output_dir or cfg.get("reporting", {}).get("audit", {}).get("output_dir", "./reports/audit")
+    with session_scope() as session:
+        path = export_audit_package(session, dt_from, dt_to, output_dir=out_dir, config_path=config)
+    typer.echo(f"Audit export: {path}")
+
+
+@app.command("report-overdue")
+def report_overdue_cmd(
+    config: str | None = typer.Option(None, "--config", "-c", help="Config YAML path"),
+) -> None:
+    """List cases that are overdue for SAR filing."""
+    from aml_monitoring.reporting.timelines import get_overdue_cases
+
+    _ensure_db(config)
+    with session_scope() as session:
+        overdue = get_overdue_cases(session, config_path=config)
+    if not overdue:
+        typer.echo("No overdue cases.")
+        return
+    typer.echo(f"Overdue cases ({len(overdue)}):")
+    typer.echo("-" * 70)
+    for c in overdue:
+        typer.echo(
+            f"  Case #{c.case_id} [{c.case_status}] | "
+            f"Alerts: {c.alert_count} | "
+            f"Deadline: {c.deadline.strftime('%Y-%m-%d')} | "
+            f"Overdue: {c.days_overdue} days"
+        )
+
+
 if __name__ == "__main__":
     app()

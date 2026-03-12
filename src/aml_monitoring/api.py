@@ -19,6 +19,7 @@ _STARTUP_TIME: float = time.time()
 from aml_monitoring.audit_context import get_correlation_id, set_audit_context
 from aml_monitoring.auth import require_api_key_write
 from aml_monitoring.cases_api import cases_router
+from aml_monitoring.reports_api import reports_router
 from aml_monitoring.config import get_config, get_config_hash
 from aml_monitoring.db import init_db, session_scope
 from aml_monitoring.models import Alert, AuditLog, Transaction
@@ -102,6 +103,7 @@ app.add_middleware(AuditContextMiddleware)
 setup_security(app)
 
 app.include_router(cases_router)
+app.include_router(reports_router)
 
 # WebSocket endpoint for real-time alert notifications
 from aml_monitoring.streaming.websocket import websocket_alerts_endpoint
